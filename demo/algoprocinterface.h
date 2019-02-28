@@ -11,6 +11,8 @@ public:
     static AlgoProcInterface* GetInstance();
 
     bool GenerateRandom(GB::AlgorithmParams &param);
+    bool Base64Encode(GB::AlgorithmParams &param);
+    bool Base64Decode(GB::AlgorithmParams &param);
 
 private:
     AlgoProcInterface();

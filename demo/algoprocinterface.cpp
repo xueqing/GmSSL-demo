@@ -36,6 +36,28 @@ bool AlgoProcInterface::GenerateRandom(GB::AlgorithmParams &param)
     return bret;
 }
 
+bool AlgoProcInterface::Base64Encode(GB::AlgorithmParams &param)
+{
+    printf("Base64 encode begin\n");
+    bool bret = false;
+    using namespace GB;
+    bret = AlgoProcLib::Base64Encode(param.strIn, param.strOut);
+
+    printf("Base64 encode finish [res=%s]\n", (bret ? "success" : "failure"));
+    return bret;
+}
+
+bool AlgoProcInterface::Base64Decode(GB::AlgorithmParams &param)
+{
+    printf("Base64 decode begin\n");
+    bool bret = false;
+    using namespace GB;
+    bret = AlgoProcLib::Base64Decode(param.strIn, param.strOut);
+
+    printf("Base64 decode finish [res=%s]\n", (bret ? "success" : "failure"));
+    return bret;
+}
+
 AlgoProcInterface::AlgoProcInterface()
 {
 
