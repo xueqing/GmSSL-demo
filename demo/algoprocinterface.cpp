@@ -60,6 +60,18 @@ bool AlgoProcInterface::VerifySignBySM2(AlgorithmParams &param)
     return (nret == AlgoProcLib::RES_OK);
 }
 
+bool AlgoProcInterface::HashBySM3(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_HASH_SM3);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
 bool AlgoProcInterface::HexStr2Buffer(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);

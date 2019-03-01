@@ -28,7 +28,8 @@ SOURCES += \
     randomgenerator.cpp \
     algoprocfactory.cpp \
     smtwoellipticcurvesign.cpp \
-    smtwoellipticcurveverify.cpp
+    smtwoellipticcurveverify.cpp \
+    smthreehash.cpp
 
 HEADERS += \
     algoproclib.h \
@@ -36,4 +37,5 @@ HEADERS += \
     algoprocfactory.h \
     algoproc_common.h \
     smtwoellipticcurvesign.h \
-    smtwoellipticcurveverify.h
+    smtwoellipticcurveverify.h \
+    smthreehash.h

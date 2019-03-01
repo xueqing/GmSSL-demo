@@ -11,6 +11,7 @@ enum ALGO_TYPE {
     ALGO_RANDOM = 0,
     ALGO_ENC_SM2,
     ALGO_DEC_SM2,
+    ALGO_HASH_SM3,
 };
 
 class AlgoProcFactory

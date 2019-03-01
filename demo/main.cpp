@@ -1,20 +1,28 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "algoprocinterface.h"
+#include "algoproclib.h"
+
+
+using namespace std;
 
 #define TEST_BASE64 0
 #define TEST_RANDOM 0
 #define TEST_CONV_HEX_BUF 0
+#define TEST_HASH_SM3 0
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
 void TestBase64Decode(GB::AlgorithmParams &param);
 void TestHexStr2Buffer(GB::AlgorithmParams &param);
 void TestBuffer2HexStr(GB::AlgorithmParams &param);
+void TestHashSM3();
 
 int main()
 {
 #if TEST_BASE64
+    GB::AlgoProcLib::Initialize();
     {
         GB::AlgorithmParams paramEn;
         paramEn.strIn = "aaaaa";
@@ -62,6 +70,13 @@ int main()
     }
 #endif
 
+#if TEST_HASH_SM3
+    {
+        TestHashSM3();
+    }
+#endif
+
+    GB::AlgoProcLib::Deinitialize();
     return 0;
 }
 
@@ -125,4 +140,36 @@ void TestBuffer2HexStr(GB::AlgorithmParams &param)
     }
     printf("Buffer2HexStr success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
+
+}
+
+void TestHashSM3()
+{
+    GB::AlgorithmParams paramhex;
+    paramhex.strIn = "6162636461626364616263646162636461626364616263646162636461626364"
+                     "6162636461626364616263646162636461626364616263646162636461626364";
+    TestHexStr2Buffer(paramhex);
+
+    GB::AlgorithmParams param;
+    param.strIn = paramhex.strOut;
+    if(!AlgoProcInterface::GetInstance()->HashBySM3(param))
+    {
+        printf("Hash by SM3 error [server orror]\n");
+        exit(-1);
+    }
+
+    GB::AlgorithmParams paramHash;
+    paramHash.strIn = "debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732";
+    TestHexStr2Buffer(paramHash);
+
+    if(paramHash.strOut != param.strOut)
+    {
+        printf("Hash by SM3 error [gen_str=%s] [dst_str=%s]\n",
+               param.strOut.c_str(), paramHash.strOut.c_str());
+        exit(-1);
+    }
+    else
+    {
+        printf("Hash by SM3 success\n");
+    }
 }

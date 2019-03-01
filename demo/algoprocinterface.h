@@ -13,6 +13,7 @@ public:
     bool GenerateRandom(GB::AlgorithmParams &param);
     bool SignBySM2(GB::AlgorithmParams &param);
     bool VerifySignBySM2(GB::AlgorithmParams &param);
+    bool HashBySM3(GB::AlgorithmParams &param);
 
     bool HexStr2Buffer(GB::AlgorithmParams &param);
     bool Buffer2HexStr(GB::AlgorithmParams &param);

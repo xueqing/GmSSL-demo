@@ -3,6 +3,7 @@
 #include "randomgenerator.h"
 #include "smtwoellipticcurvesign.h"
 #include "smtwoellipticcurveverify.h"
+#include <smthreehash.h>
 
 using namespace GB;
 
@@ -36,6 +37,9 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         break;
     case ALGO_DEC_SM2:
         pAlgoProcLib = new SMTwoEllipticCurveVerify;
+        break;
+    case ALGO_HASH_SM3:
+        pAlgoProcLib = new SMThreeHash;
         break;
     default:
         pAlgoProcLib = new AlgoProcLib;
