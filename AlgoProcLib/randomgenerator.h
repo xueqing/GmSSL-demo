@@ -10,7 +10,7 @@ class RandomGenerator : public AlgoProcLib
 public:
     RandomGenerator();
 
-    bool ProcessAlgorithm(AlgorithmParams &param);
+    int ProcessAlgorithm(AlgorithmParams &param) override;
 };
 
 }//namespace GB

@@ -5,6 +5,7 @@
 #include "algoprocfactory.h"
 
 using namespace std;
+using namespace GB;
 
 AlgoProcInterface*  AlgoProcInterface::m_pInstance = nullptr;
 std::mutex          AlgoProcInterface::m_instanceMutex;
@@ -23,39 +24,34 @@ AlgoProcInterface *AlgoProcInterface::GetInstance()
     return m_pInstance;
 }
 
-bool AlgoProcInterface::GenerateRandom(GB::AlgorithmParams &param)
+bool AlgoProcInterface::GenerateRandom(AlgorithmParams &param)
 {
-    printf("Generate random begin\n");
-    bool bret = false;
-    using namespace GB;
+    printf("%s begin\n", __func__);
     AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_RANDOM);
-    bret = (pAlgoProcLib && pAlgoProcLib->ProcessAlgorithm(param));
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
     AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
 
-    printf("Generate random finish [res=%s]\n", (bret ? "success" : "failure"));
-    return bret;
+    printf("%s finish [res=%s] [err=%n]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    return (nret == AlgoProcLib::RES_OK);
 }
 
-bool AlgoProcInterface::Base64Encode(GB::AlgorithmParams &param)
+bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 {
-    printf("Base64 encode begin\n");
-    bool bret = false;
-    using namespace GB;
-    bret = AlgoProcLib::Base64Encode(param.strIn, param.strOut);
-
-    printf("Base64 encode finish [res=%s]\n", (bret ? "success" : "failure"));
-    return bret;
+    printf("%s begin\n", __func__);
+    int nret = AlgoProcLib::Base64Encode(param.strIn, param.strOut);
+    printf("%s finish [res=%s] [err=%n]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    return (nret == AlgoProcLib::RES_OK);
 }
 
-bool AlgoProcInterface::Base64Decode(GB::AlgorithmParams &param)
+bool AlgoProcInterface::Base64Decode(AlgorithmParams &param)
 {
-    printf("Base64 decode begin\n");
-    bool bret = false;
-    using namespace GB;
-    bret = AlgoProcLib::Base64Decode(param.strIn, param.strOut);
-
-    printf("Base64 decode finish [res=%s]\n", (bret ? "success" : "failure"));
-    return bret;
+    printf("%s begin\n", __func__);
+    int nret = AlgoProcLib::Base64Decode(param.strIn, param.strOut);
+    printf("%s finish [res=%s] [err=%n]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    return (nret == AlgoProcLib::RES_OK);
 }
 
 AlgoProcInterface::AlgoProcInterface()

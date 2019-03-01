@@ -30,6 +30,7 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         pAlgoProcLib = new RandomGenerator;
         break;
     default:
+        pAlgoProcLib = new AlgoProcLib;
         break;
     }
     return pAlgoProcLib;
