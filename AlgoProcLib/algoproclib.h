@@ -25,6 +25,8 @@ public:
     static void Deinitialize(); // must be called after using it
 
     virtual int ProcessAlgorithm(AlgorithmParams &param); //ref PROC_RES
+    static int HexStr2Buffer(AlgorithmParams &param);
+    static int Buffer2HexStr(AlgorithmParams &param);
     static int Base64Encode(AlgorithmParams &param);
     static int Base64Decode(AlgorithmParams &param);
     static void ReleaseAlgoProcLib(AlgoProcLib *pAlgoProcLib);

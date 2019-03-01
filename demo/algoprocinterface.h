@@ -14,6 +14,8 @@ public:
     bool SignBySM2(GB::AlgorithmParams &param);
     bool VerifySignBySM2(GB::AlgorithmParams &param);
 
+    bool HexStr2Buffer(GB::AlgorithmParams &param);
+    bool Buffer2HexStr(GB::AlgorithmParams &param);
     bool Base64Encode(GB::AlgorithmParams &param);
     bool Base64Decode(GB::AlgorithmParams &param);
 

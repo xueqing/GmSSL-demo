@@ -8,10 +8,8 @@ CONFIG += c++11
 unix
 {
     CONFIG(debug, debug|release) {
-        LIBS += -L$$PWD/../build/debug
         DESTDIR = $$PWD/../build/debug
     } else {
-        LIBS += -L$$PWD/../build/release
         DESTDIR = $$PWD/../build/release
     }
 }
@@ -22,6 +20,7 @@ unix{
 }
 
 INCLUDEPATH += \
+    $$PWD/../util \
     $$PWD/../include
 
 SOURCES += \

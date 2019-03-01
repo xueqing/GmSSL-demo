@@ -60,6 +60,24 @@ bool AlgoProcInterface::VerifySignBySM2(AlgorithmParams &param)
     return (nret == AlgoProcLib::RES_OK);
 }
 
+bool AlgoProcInterface::HexStr2Buffer(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    int nret = AlgoProcLib::HexStr2Buffer(param);
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
+bool AlgoProcInterface::Buffer2HexStr(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    int nret = AlgoProcLib::Buffer2HexStr(param);
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
 bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);

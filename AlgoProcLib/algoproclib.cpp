@@ -8,6 +8,8 @@
 #include <openssl/err.h>
 #include <openssl/saf.h>
 
+#include "cstring.h"
+
 using namespace GB;
 
 AlgoProcLib::AlgoProcLib()
@@ -51,6 +53,46 @@ int AlgoProcLib::ProcessAlgorithm(AlgorithmParams &param)
 {
     UNUSED_ARGUMENT(param);
     return RES_NOT_SUPPORTED;
+}
+
+int AlgoProcLib::HexStr2Buffer(AlgorithmParams &param)
+{
+    unsigned char *outBuf = nullptr;
+    long outLen = param.lenOut;
+    if(!(outBuf = OPENSSL_hexstr2buf(param.strIn.c_str(), &outLen)))
+    {
+        ERR_print_errors_fp(stderr);
+        return RES_SERVER_ERROR;
+    }
+
+    param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
+    param.lenOut = outLen;
+    return RES_OK;
+}
+
+int AlgoProcLib::Buffer2HexStr(AlgorithmParams &param)
+{
+    unsigned char inBuf[param.strIn.length()];
+    memset(inBuf, 0, sizeof(inBuf));
+    memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
+    long inLen = sizeof(inBuf);
+
+    char *outBuf = nullptr;
+    if(!(outBuf = OPENSSL_buf2hexstr(inBuf, inLen)))
+    {
+        ERR_print_errors_fp(stderr);
+        return RES_SERVER_ERROR;
+    }
+
+    param.strOut = std::string(outBuf);
+
+    // remove redundant ':', added by OPENSSL_buf2hexstr between digits
+    std::string oldstr = ":";
+    std::string newstr = "";
+    param.strOut = CString::ReplaceAll(param.strOut, oldstr, newstr);
+    param.lenOut = param.strOut.length();
+
+    return RES_OK;
 }
 
 int AlgoProcLib::Base64Encode(AlgorithmParams &param)

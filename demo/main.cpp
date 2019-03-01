@@ -4,10 +4,13 @@
 
 #define TEST_BASE64 0
 #define TEST_RANDOM 0
+#define TEST_CONV_HEX_BUF 0
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
 void TestBase64Decode(GB::AlgorithmParams &param);
+void TestHexStr2Buffer(GB::AlgorithmParams &param);
+void TestBuffer2HexStr(GB::AlgorithmParams &param);
 
 int main()
 {
@@ -33,6 +36,23 @@ int main()
 #if TEST_RANDOM
     {
         TestRandom();
+    }
+#endif
+
+#if TEST_CONV_HEX_BUF
+    {
+        GB::AlgorithmParams paramHex;
+        paramHex.strIn = "616263";
+        TestHexStr2Buffer(paramHex);
+
+        GB::AlgorithmParams paramBuf;
+        paramBuf.strIn = paramHex.strOut;
+        TestBuffer2HexStr(paramBuf);
+
+        if(paramHex.strIn == paramBuf.strOut)
+            printf("Convert buffer and hex string test success\n");
+        else
+            printf("Convert buffer and hex string failure\n");
     }
 #endif
 
@@ -76,5 +96,27 @@ void TestBase64Decode(GB::AlgorithmParams &param)
         return;
     }
     printf("Base64 decode success [str_in=%s] [str_out=%s]\n",
+           param.strIn.c_str(), param.strOut.c_str());
+}
+
+void TestHexStr2Buffer(GB::AlgorithmParams &param)
+{
+    if(!AlgoProcInterface::GetInstance()->HexStr2Buffer(param))
+    {
+        printf("HexStr2Buffer error\n");
+        return;
+    }
+    printf("HexStr2Buffer success [str_in=%s] [str_out=%s]\n",
+           param.strIn.c_str(), param.strOut.c_str());
+}
+
+void TestBuffer2HexStr(GB::AlgorithmParams &param)
+{
+    if(!AlgoProcInterface::GetInstance()->Buffer2HexStr(param))
+    {
+        printf("Buffer2HexStr error\n");
+        return;
+    }
+    printf("Buffer2HexStr success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
 }

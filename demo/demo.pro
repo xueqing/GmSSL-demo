@@ -11,6 +11,7 @@ TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += \
+    $$PWD/../util \
     $$PWD/../AlgoProcLib \
     $$PWD/../include
 
@@ -31,7 +32,9 @@ unix{
 }
 
 LIBS += \
-    -lAlgoProcLib
+    -lAlgoProcLib \
+    -lUtilityLib
+
 
 LIBS += \
     -L$$PWD/../lib \
