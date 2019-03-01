@@ -5,7 +5,6 @@ TEMPLATE = lib
 
 CONFIG += c++11
 
-
 unix
 {
     CONFIG(debug, debug|release) {
