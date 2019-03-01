@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #include "algoprocinterface.h"
 #include "algoproclib.h"
@@ -39,7 +40,7 @@ int main()
         else
         {
             printf("Base64 test failure\n");
-            exit(-1);
+            assert(false);
         }
     }
 #endif
@@ -65,7 +66,7 @@ int main()
         else
         {
             printf("Convert buffer and hex string failure\n");
-            exit(-1);
+            assert(false);
         }
     }
 #endif
@@ -87,7 +88,7 @@ void TestRandom()
     if(!AlgoProcInterface::GetInstance()->GenerateRandom(param))
     {
         printf("Generate random error\n");
-        exit(-1);
+        assert(false);
     }
     printf("Generate random success [str=%s]\n", param.strOut.c_str());
 
@@ -103,7 +104,7 @@ void TestBase64Encode(GB::AlgorithmParams &param)
     if(!AlgoProcInterface::GetInstance()->Base64Encode(param))
     {
         printf("Base64 encode error\n");
-        exit(-1);
+        assert(false);
     }
     printf("Base64 encode success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
@@ -114,7 +115,7 @@ void TestBase64Decode(GB::AlgorithmParams &param)
     if(!AlgoProcInterface::GetInstance()->Base64Decode(param))
     {
         printf("Base64 decode error\n");
-        exit(-1);
+        assert(false);
     }
     printf("Base64 decode success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
@@ -125,7 +126,7 @@ void TestHexStr2Buffer(GB::AlgorithmParams &param)
     if(!AlgoProcInterface::GetInstance()->HexStr2Buffer(param))
     {
         printf("HexStr2Buffer error\n");
-        exit(-1);
+        assert(false);
     }
     printf("HexStr2Buffer success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
@@ -136,7 +137,7 @@ void TestBuffer2HexStr(GB::AlgorithmParams &param)
     if(!AlgoProcInterface::GetInstance()->Buffer2HexStr(param))
     {
         printf("Buffer2HexStr error\n");
-        exit(-1);
+        assert(false);
     }
     printf("Buffer2HexStr success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
@@ -155,7 +156,7 @@ void TestHashSM3()
     if(!AlgoProcInterface::GetInstance()->HashBySM3(param))
     {
         printf("Hash by SM3 error [server orror]\n");
-        exit(-1);
+        assert(false);
     }
 
     GB::AlgorithmParams paramHash;
@@ -166,7 +167,7 @@ void TestHashSM3()
     {
         printf("Hash by SM3 error [gen_str=%s] [dst_str=%s]\n",
                param.strOut.c_str(), paramHash.strOut.c_str());
-        exit(-1);
+        assert(false);
     }
     else
     {
