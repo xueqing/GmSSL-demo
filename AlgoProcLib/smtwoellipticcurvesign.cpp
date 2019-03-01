@@ -19,14 +19,13 @@ int SMTwoEllipticCurveSign::ProcessAlgorithm(AlgorithmParams &param)
     unsigned char dgst[param.strIn.length()];
     memset(dgst, 0, sizeof(dgst));
     memcpy(dgst, param.strIn.c_str(), param.strIn.length());
-    unsigned int dgstlen = sizeof(dgst) & INT_MAX;
 
     unsigned char sig[MAX_BUF_SIZE];
     memset(sig, 0, MAX_BUF_SIZE);
 
-    if(!SM2_sign(type, dgst, dgstlen, sig, &param.lenOut, prikey))
+    if(!SM2_sign(type, dgst, param.strIn.length(), sig, &param.lenOut, prikey))
     {
-        fprintf(stderr, "%s() failed to SM2_verify\n", __func__);
+        fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
         return RES_SERVER_ERROR;
     }
 

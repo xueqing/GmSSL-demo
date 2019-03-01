@@ -58,15 +58,14 @@ int AlgoProcLib::ProcessAlgorithm(AlgorithmParams &param)
 int AlgoProcLib::HexStr2Buffer(AlgorithmParams &param)
 {
     unsigned char *outBuf = nullptr;
-    long outLen = param.lenOut;
-    if(!(outBuf = OPENSSL_hexstr2buf(param.strIn.c_str(), &outLen)))
+    long *outLen = reinterpret_cast<long*>(&(param.lenOut));
+    if(!(outBuf = OPENSSL_hexstr2buf(param.strIn.c_str(), outLen)))
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
     }
 
     param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
-    param.lenOut = outLen;
     return RES_OK;
 }
 
@@ -75,10 +74,9 @@ int AlgoProcLib::Buffer2HexStr(AlgorithmParams &param)
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
-    long inLen = sizeof(inBuf);
 
     char *outBuf = nullptr;
-    if(!(outBuf = OPENSSL_buf2hexstr(inBuf, inLen)))
+    if(!(outBuf = OPENSSL_buf2hexstr(inBuf, param.strIn.length())))
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
@@ -100,12 +98,11 @@ int AlgoProcLib::Base64Encode(AlgorithmParams &param)
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
-    unsigned int inLen = param.strIn.length();
 
     unsigned char outBuf[MAX_BUF_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
 
-    if(SAF_Base64_Encode(inBuf, inLen, outBuf, &param.lenOut) != SAR_Ok)
+    if(SAF_Base64_Encode(inBuf, param.strIn.length(), outBuf, &param.lenOut) != SAR_Ok)
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
@@ -120,12 +117,11 @@ int AlgoProcLib::Base64Decode(AlgorithmParams &param)
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
-    unsigned int inLen = param.strIn.length();
 
     unsigned char outBuf[MAX_BUF_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
 
-    if(SAF_Base64_Decode(inBuf, inLen, outBuf, &param.lenOut) != SAR_Ok)
+    if(SAF_Base64_Decode(inBuf, param.strIn.length(), outBuf, &param.lenOut) != SAR_Ok)
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
