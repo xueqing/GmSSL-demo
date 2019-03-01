@@ -9,6 +9,7 @@ struct AlgorithmParams {
     std::string key;
     std::string strIn;
     std::string strOut;
+    int lenOut = -1;
 };
 
 }//namespace GB

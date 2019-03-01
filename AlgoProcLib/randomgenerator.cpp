@@ -17,7 +17,7 @@ RandomGenerator::RandomGenerator()
 
 bool RandomGenerator::ProcessAlgorithm(AlgorithmParams &param)
 {
-    const int BUFFER_SIZE = (8 * 1024) - 13;
+    const int BUFFER_SIZE = (param.lenOut == -1 ? (8 * 1024) - 13 : param.lenOut);
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
         fprintf(stderr, "%s() failed to allocate ctx\n", __func__);

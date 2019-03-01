@@ -47,14 +47,14 @@ void AlgoProcLib::Deinitialize()
     ERR_free_strings();
 }
 
-bool AlgoProcLib::Base64Encode(std::string &inStr, std::string &outStr)
+bool AlgoProcLib::Base64Encode(std::string &inStr, std::string &outStr, int lenOut)
 {
     unsigned char inBuf[inStr.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, inStr.c_str(), inStr.length());
     unsigned int len1 = sizeof(inBuf) & INT_MAX;
 
-    const int BUFFER_SIZE = 512;
+    const int BUFFER_SIZE = (lenOut == -1 ? 512 : lenOut);
     unsigned char outBuf[BUFFER_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
     unsigned int len2 = BUFFER_SIZE + UINT_MAX + 1;
@@ -69,14 +69,14 @@ bool AlgoProcLib::Base64Encode(std::string &inStr, std::string &outStr)
     return true;
 }
 
-bool AlgoProcLib::Base64Decode(std::string &inStr, std::string &outStr)
+bool AlgoProcLib::Base64Decode(std::string &inStr, std::string &outStr, int lenOut)
 {
     unsigned char inBuf[inStr.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, inStr.c_str(), inStr.length());
     unsigned int len1 = sizeof(inBuf) & INT_MAX;
 
-    const int BUFFER_SIZE = 512;
+    const int BUFFER_SIZE = (lenOut == -1 ? 512 : lenOut);
     unsigned char outBuf[BUFFER_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
     unsigned int len2 = BUFFER_SIZE + UINT_MAX + 1;
