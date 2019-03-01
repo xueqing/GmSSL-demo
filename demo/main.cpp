@@ -2,12 +2,16 @@
 
 #include "algoprocinterface.h"
 
+#define TEST_BASE64 0
+#define TEST_RANDOM 0
+
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
 void TestBase64Decode(GB::AlgorithmParams &param);
 
 int main()
 {
+#if TEST_BASE64
     {
         GB::AlgorithmParams paramEn;
         paramEn.strIn = "aaaaa";
@@ -24,10 +28,14 @@ int main()
         else
             printf("Base64 test failure\n");
     }
+#endif
 
+#if TEST_RANDOM
     {
         TestRandom();
     }
+#endif
+
     return 0;
 }
 
