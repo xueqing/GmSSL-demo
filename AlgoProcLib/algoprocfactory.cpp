@@ -1,6 +1,8 @@
 #include "algoprocfactory.h"
 
 #include "randomgenerator.h"
+#include "smtwoellipticcurvesign.h"
+#include "smtwoellipticcurveverify.h"
 
 using namespace GB;
 
@@ -28,6 +30,12 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
     switch (algotype) {
     case ALGO_RANDOM:
         pAlgoProcLib = new RandomGenerator;
+        break;
+    case ALGO_ENC_SM2:
+        pAlgoProcLib = new SMTwoEllipticCurveSign;
+        break;
+    case ALGO_DEC_SM2:
+        pAlgoProcLib = new SMTwoEllipticCurveVerify;
         break;
     default:
         pAlgoProcLib = new AlgoProcLib;

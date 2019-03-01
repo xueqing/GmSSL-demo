@@ -11,6 +11,9 @@ public:
     static AlgoProcInterface* GetInstance();
 
     bool GenerateRandom(GB::AlgorithmParams &param);
+    bool SignBySM2(GB::AlgorithmParams &param);
+    bool VerifySignBySM2(GB::AlgorithmParams &param);
+
     bool Base64Encode(GB::AlgorithmParams &param);
     bool Base64Decode(GB::AlgorithmParams &param);
 

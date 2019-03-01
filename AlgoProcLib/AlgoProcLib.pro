@@ -27,10 +27,14 @@ INCLUDEPATH += \
 SOURCES += \
     algoproclib.cpp \
     randomgenerator.cpp \
-    algoprocfactory.cpp
+    algoprocfactory.cpp \
+    smtwoellipticcurvesign.cpp \
+    smtwoellipticcurveverify.cpp
 
 HEADERS += \
     algoproclib.h \
     randomgenerator.h \
     algoprocfactory.h \
-    algoproc_common.h
+    algoproc_common.h \
+    smtwoellipticcurvesign.h \
+    smtwoellipticcurveverify.h

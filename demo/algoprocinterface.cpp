@@ -31,8 +31,32 @@ bool AlgoProcInterface::GenerateRandom(AlgorithmParams &param)
     int nret = pAlgoProcLib->ProcessAlgorithm(param);
     AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
 
-    printf("%s finish [res=%s] [err=%n]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
+bool AlgoProcInterface::SignBySM2(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_ENC_SM2);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
+bool AlgoProcInterface::VerifySignBySM2(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_DEC_SM2);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
 }
 
@@ -40,8 +64,8 @@ bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);
     int nret = AlgoProcLib::Base64Encode(param.strIn, param.strOut);
-    printf("%s finish [res=%s] [err=%n]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
 }
 
@@ -49,8 +73,8 @@ bool AlgoProcInterface::Base64Decode(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);
     int nret = AlgoProcLib::Base64Decode(param.strIn, param.strOut);
-    printf("%s finish [res=%s] [err=%n]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), &nret);
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
 }
 
