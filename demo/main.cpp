@@ -11,20 +11,18 @@ int main()
     {
         GB::AlgorithmParams paramEn;
         paramEn.strIn = "aaaaa";
+        paramEn.lenOut = 128;
         TestBase64Encode(paramEn);
 
         GB::AlgorithmParams paramDe;
         paramDe.strIn = paramEn.strOut;
+        paramDe.lenOut = 128;
         TestBase64Decode(paramDe);
 
         if(paramEn.strIn == paramDe.strOut)
-        {
             printf("Base64 test success\n");
-        }
         else
-        {
             printf("Base64 test failure\n");
-        }
     }
 
     {
@@ -36,7 +34,7 @@ int main()
 void TestRandom()
 {
     GB::AlgorithmParams param;
-    param.lenOut = 20;
+    param.lenOut = 10;
     if(!AlgoProcInterface::GetInstance()->GenerateRandom(param))
     {
         printf("Generate random error\n");
@@ -46,7 +44,7 @@ void TestRandom()
 
     GB::AlgorithmParams paramEn;
     paramEn.strIn = param.strOut;
-    paramEn.lenOut = 100;
+    paramEn.lenOut = 128;
     TestBase64Encode(paramEn);
     printf("Generate random success [base64_encode_str=%s]\n", paramEn.strOut.c_str());
 }

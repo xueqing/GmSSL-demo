@@ -53,47 +53,43 @@ int AlgoProcLib::ProcessAlgorithm(AlgorithmParams &param)
     return RES_NOT_SUPPORTED;
 }
 
-int AlgoProcLib::Base64Encode(std::string &inStr, std::string &outStr, int lenOut)
+int AlgoProcLib::Base64Encode(AlgorithmParams &param)
 {
-    unsigned char inBuf[inStr.length()];
+    unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
-    memcpy(inBuf, inStr.c_str(), inStr.length());
-    unsigned int inLen = sizeof(inBuf) & INT_MAX;
+    memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
+    unsigned int inLen = param.strIn.length();
 
-    const int BUFFER_SIZE = (lenOut == -1 ? 512 : lenOut);
-    unsigned char outBuf[BUFFER_SIZE];
+    unsigned char outBuf[MAX_BUF_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
-    unsigned int outLen = BUFFER_SIZE + UINT_MAX + 1;
 
-    if(SAF_Base64_Encode(inBuf, inLen, outBuf, &outLen) != SAR_Ok)
+    if(SAF_Base64_Encode(inBuf, inLen, outBuf, &param.lenOut) != SAR_Ok)
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
     }
 
-    outStr = std::string(reinterpret_cast<const char*>(outBuf));
+    param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
     return RES_OK;
 }
 
-int AlgoProcLib::Base64Decode(std::string &inStr, std::string &outStr, int lenOut)
+int AlgoProcLib::Base64Decode(AlgorithmParams &param)
 {
-    unsigned char inBuf[inStr.length()];
+    unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
-    memcpy(inBuf, inStr.c_str(), inStr.length());
-    unsigned int inLen = sizeof(inBuf) & INT_MAX;
+    memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
+    unsigned int inLen = param.strIn.length();
 
-    const int BUFFER_SIZE = (lenOut == -1 ? 512 : lenOut);
-    unsigned char outBuf[BUFFER_SIZE];
+    unsigned char outBuf[MAX_BUF_SIZE];
     memset(outBuf, 0, sizeof(outBuf));
-    unsigned int outLen = BUFFER_SIZE + UINT_MAX + 1;
 
-    if(SAF_Base64_Decode(inBuf, inLen, outBuf, &outLen) != SAR_Ok)
+    if(SAF_Base64_Decode(inBuf, inLen, outBuf, &param.lenOut) != SAR_Ok)
     {
         ERR_print_errors_fp(stderr);
         return RES_SERVER_ERROR;
     }
 
-    outStr = std::string(reinterpret_cast<const char*>(outBuf));
+    param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
     return RES_OK;
 }
 

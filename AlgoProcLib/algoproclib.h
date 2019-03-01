@@ -7,6 +7,7 @@ namespace GB {
 
 class AlgoProcLib
 {
+#define MAX_BUF_SIZE 512
 #define UNUSED_ARGUMENT(x) (void)x
 public:
     enum PROC_RES
@@ -24,8 +25,8 @@ public:
     static void Deinitialize(); // must be called after using it
 
     virtual int ProcessAlgorithm(AlgorithmParams &param); //ref PROC_RES
-    static int Base64Encode(std::string &inStr, std::string &outStr, int lenOut = -1);
-    static int Base64Decode(std::string &inStr, std::string &outStr, int lenOut = -1);
+    static int Base64Encode(AlgorithmParams &param);
+    static int Base64Decode(AlgorithmParams &param);
     static void ReleaseAlgoProcLib(AlgoProcLib *pAlgoProcLib);
 };
 

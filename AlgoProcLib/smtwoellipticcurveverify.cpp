@@ -32,6 +32,5 @@ int SMTwoEllipticCurveVerify::ProcessAlgorithm(AlgorithmParams &param)
         return RES_VERIFY_FAILURE;
     }
 
-    param.strOut = string(reinterpret_cast<const char*>(sig));
     return RES_OK;
 }

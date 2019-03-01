@@ -63,7 +63,7 @@ bool AlgoProcInterface::VerifySignBySM2(AlgorithmParams &param)
 bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::Base64Encode(param.strIn, param.strOut);
+    int nret = AlgoProcLib::Base64Encode(param);
     printf("%s finish [res=%s] [err=%d]\n", __func__,
            (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
@@ -72,7 +72,7 @@ bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 bool AlgoProcInterface::Base64Decode(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::Base64Decode(param.strIn, param.strOut);
+    int nret = AlgoProcLib::Base64Decode(param);
     printf("%s finish [res=%s] [err=%d]\n", __func__,
            (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
