@@ -18,6 +18,12 @@ public:
         RES_VERIFY_FAILURE,
     };
 
+    enum CRPT_TYPE
+    {
+        CRYP_DEC = 0,
+        CRYP_ENC = 1,
+    };
+
     AlgoProcLib();
     virtual ~AlgoProcLib();
 

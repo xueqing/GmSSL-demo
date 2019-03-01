@@ -12,6 +12,8 @@ enum ALGO_TYPE {
     ALGO_ENC_SM2,
     ALGO_DEC_SM2,
     ALGO_HASH_SM3,
+    ALGO_ENC_SM4_ECB,
+    ALGO_DEC_SM4_ECB,
 };
 
 class AlgoProcFactory

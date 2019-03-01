@@ -29,7 +29,8 @@ SOURCES += \
     algoprocfactory.cpp \
     smtwoellipticcurvesign.cpp \
     smtwoellipticcurveverify.cpp \
-    smthreehash.cpp
+    smthreehash.cpp \
+    smfourecbcrypt.cpp
 
 HEADERS += \
     algoproclib.h \
@@ -38,4 +39,5 @@ HEADERS += \
     algoproc_common.h \
     smtwoellipticcurvesign.h \
     smtwoellipticcurveverify.h \
-    smthreehash.h
+    smthreehash.h \
+    smfourecbcrypt.h

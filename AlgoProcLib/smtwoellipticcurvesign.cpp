@@ -32,4 +32,3 @@ int SMTwoEllipticCurveSign::ProcessAlgorithm(AlgorithmParams &param)
     param.strOut = string(reinterpret_cast<const char*>(sig));
     return RES_OK;
 }
-

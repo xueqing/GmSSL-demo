@@ -72,6 +72,30 @@ bool AlgoProcInterface::HashBySM3(AlgorithmParams &param)
     return (nret == AlgoProcLib::RES_OK);
 }
 
+bool AlgoProcInterface::EncryptBySM4ECB(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_ENC_SM4_ECB);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
+bool AlgoProcInterface::DecryptBySM4ECB(AlgorithmParams &param)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_DEC_SM4_ECB);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
+}
+
 bool AlgoProcInterface::HexStr2Buffer(AlgorithmParams &param)
 {
     printf("%s begin\n", __func__);

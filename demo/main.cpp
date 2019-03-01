@@ -12,6 +12,7 @@ using namespace std;
 #define TEST_RANDOM 0
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
+#define TEST_SM4_ECB 1
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
@@ -19,6 +20,8 @@ void TestBase64Decode(GB::AlgorithmParams &param);
 void TestHexStr2Buffer(GB::AlgorithmParams &param);
 void TestBuffer2HexStr(GB::AlgorithmParams &param);
 void TestHashSM3();
+void TestEncryptBySM4ECB(GB::AlgorithmParams &param);
+void TestDecryptBySM4ECB(GB::AlgorithmParams &param);
 
 int main()
 {
@@ -74,6 +77,28 @@ int main()
 #if TEST_HASH_SM3
     {
         TestHashSM3();
+    }
+#endif
+
+#if TEST_SM4_ECB
+    {
+        GB::AlgorithmParams paramEn;
+        paramEn.strIn = "aaaaqwertyuiop";
+        paramEn.lenOut = 128;
+        TestEncryptBySM4ECB(paramEn);
+
+        GB::AlgorithmParams paramDe;
+        paramDe.strIn = paramEn.strOut;
+        paramDe.lenOut = 128;
+        TestDecryptBySM4ECB(paramDe);
+
+        if(paramEn.strIn == paramDe.strOut)
+            printf("SM4_ECB test success\n");
+        else
+        {
+            printf("SM4_ECB test failure\n");
+            assert(false);
+        }
     }
 #endif
 
@@ -173,4 +198,26 @@ void TestHashSM3()
     {
         printf("Hash by SM3 success\n");
     }
+}
+
+void TestEncryptBySM4ECB(GB::AlgorithmParams &param)
+{
+    if(!AlgoProcInterface::GetInstance()->EncryptBySM4ECB(param))
+    {
+        printf("SM4_ECB encode error\n");
+        assert(false);
+    }
+    printf("SM4_ECB encode success [str_in=%s] [str_out=%s]\n",
+           param.strIn.c_str(), param.strOut.c_str());
+}
+
+void TestDecryptBySM4ECB(GB::AlgorithmParams &param)
+{
+    if(!AlgoProcInterface::GetInstance()->DecryptBySM4ECB(param))
+    {
+        printf("SM4_ECB decode error\n");
+        assert(false);
+    }
+    printf("SM4_ECB decode success [str_in=%s] [str_out=%s]\n",
+           param.strIn.c_str(), param.strOut.c_str());
 }

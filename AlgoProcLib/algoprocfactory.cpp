@@ -3,7 +3,8 @@
 #include "randomgenerator.h"
 #include "smtwoellipticcurvesign.h"
 #include "smtwoellipticcurveverify.h"
-#include <smthreehash.h>
+#include "smthreehash.h"
+#include "smfourecbcrypt.h"
 
 using namespace GB;
 
@@ -40,6 +41,12 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         break;
     case ALGO_HASH_SM3:
         pAlgoProcLib = new SMThreeHash;
+        break;
+    case ALGO_ENC_SM4_ECB:
+        pAlgoProcLib = new SMFourECBCrypt(AlgoProcLib::CRYP_ENC);
+        break;
+    case ALGO_DEC_SM4_ECB:
+        pAlgoProcLib = new SMFourECBCrypt(AlgoProcLib::CRYP_DEC);
         break;
     default:
         pAlgoProcLib = new AlgoProcLib;
