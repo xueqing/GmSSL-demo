@@ -15,7 +15,9 @@ unix
 }
 
 HEADERS += \
-    cstring.h
+    cstring.h \
+    mysm4.h
 
 SOURCES += \
-    cstring.cpp
+    cstring.cpp \
+    mysm4.cpp

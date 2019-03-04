@@ -5,7 +5,6 @@
 #include "algoprocinterface.h"
 #include "algoproclib.h"
 
-
 using namespace std;
 
 #define TEST_BASE64 0
