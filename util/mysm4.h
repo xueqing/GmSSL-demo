@@ -24,16 +24,9 @@ extern "C" {
  *
  * \param ctx      SM4 context to be initialized
  * \param key      16-byte secret key
+ * \param mode     SM4_ENCRYPT or SM4_DECRYPT
  */
-void sm4_setkey_enc( sm4_context *ctx, unsigned char key[16] );
-
-/**
- * \brief          SM4 key schedule (128-bit, decryption)
- *
- * \param ctx      SM4 context to be initialized
- * \param key      16-byte secret key
- */
-void sm4_setkey_dec( sm4_context *ctx, unsigned char key[16] );
+void sm4_setkey( sm4_context *ctx, unsigned char key[16], int mode );
 
 /**
  * \brief          SM4-ECB block encryption/decryption

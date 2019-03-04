@@ -202,25 +202,19 @@ static void sm4_one_round( unsigned long sk[32],
 }
 
 /*
- * SM4 key schedule (128-bit, encryption)
+ * SM4 key schedule (128-bit)
  */
-void sm4_setkey_enc( sm4_context *ctx, unsigned char key[16] )
-{
-    ctx->mode = SM4_ENCRYPT;
-    sm4_setkey( ctx->sk, key );
-}
-
-/*
- * SM4 key schedule (128-bit, decryption)
- */
-void sm4_setkey_dec( sm4_context *ctx, unsigned char key[16] )
+void sm4_setkey( sm4_context *ctx, unsigned char key[16], int mode )
 {
     int i;
-    ctx->mode = SM4_ENCRYPT;
+    ctx->mode = mode;
     sm4_setkey( ctx->sk, key );
-    for ( i = 0; i < 16; i ++ )
+    if (mode == SM4_ENCRYPT)
     {
-        SWAP( ctx->sk[ i ], ctx->sk[ 31 - i] );
+        for ( i = 0; i < 16; i ++ )
+        {
+            SWAP( ctx->sk[ i ], ctx->sk[ 31 - i] );
+        }
     }
 }
 
