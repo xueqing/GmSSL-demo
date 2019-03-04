@@ -83,7 +83,7 @@ int main()
 #if TEST_SM4_ECB
     {
         GB::AlgorithmParams paramEn;
-        paramEn.strIn = "aaaaqwertyuiop";
+        paramEn.strIn = "61626364";
         paramEn.lenOut = 128;
         TestEncryptBySM4ECB(paramEn);
 
