@@ -5,14 +5,13 @@
 #include "algoprocinterface.h"
 #include "algoproclib.h"
 
-
 using namespace std;
 
 #define TEST_BASE64 0
 #define TEST_RANDOM 0
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
-#define TEST_SM4_ECB 1
+#define TEST_SM4_ECB 0
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
