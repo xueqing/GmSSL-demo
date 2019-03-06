@@ -1,7 +1,8 @@
 #include "smthreehash.h"
 
+#include <string.h>
+
 #include <openssl/evp.h>
-#include <openssl/sm3.h>
 #include <openssl/err.h>
 
 using namespace std;
