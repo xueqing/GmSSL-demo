@@ -1,2 +1,9 @@
 build/
 *.user
+log
+*.csr
+*.crt
+*.srl
+*.key
+*.pem
+*.keystore
