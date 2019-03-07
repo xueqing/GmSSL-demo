@@ -18,7 +18,8 @@ using namespace std;
 using namespace GB;
 
 SMFourECBCrypt::SMFourECBCrypt(CRPT_TYPE cryptype)
-    : m_crypType(cryptype)
+    : AlgoProcLib()
+    , m_crypType(cryptype)
 {
 
 }

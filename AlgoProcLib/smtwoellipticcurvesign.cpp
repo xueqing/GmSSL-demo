@@ -6,6 +6,7 @@ using namespace std;
 using namespace GB;
 
 SMTwoEllipticCurveSign::SMTwoEllipticCurveSign()
+    : AlgoProcLib()
 {
 
 }

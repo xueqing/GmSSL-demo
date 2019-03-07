@@ -5,6 +5,20 @@
 
 namespace GB {
 
+enum ALGO_TYPE {
+    ALGO_UNKNOWN = 0,
+    ALGO_HEX2BUF,
+    ALGO_BUF2HEX,
+    ALGO_ENC_BASE64,
+    ALGO_DEC_BASE64,
+    ALGO_RANDOM,
+    ALGO_ENC_SM2,
+    ALGO_DEC_SM2,
+    ALGO_HASH_SM3,
+    ALGO_ENC_SM4_ECB,
+    ALGO_DEC_SM4_ECB,
+};
+
 struct AlgorithmParams {
     std::string key;
     std::string strIn;

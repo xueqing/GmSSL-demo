@@ -26,113 +26,67 @@ AlgoProcInterface *AlgoProcInterface::GetInstance()
 
 bool AlgoProcInterface::GenerateRandom(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_RANDOM);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_RANDOM);
 }
 
 bool AlgoProcInterface::SignBySM2(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_ENC_SM2);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_ENC_SM2);
 }
 
 bool AlgoProcInterface::VerifySignBySM2(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_DEC_SM2);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_DEC_SM2);
 }
 
 bool AlgoProcInterface::HashBySM3(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_HASH_SM3);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_HASH_SM3);
 }
 
 bool AlgoProcInterface::EncryptBySM4ECB(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_ENC_SM4_ECB);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_ENC_SM4_ECB);
 }
 
 bool AlgoProcInterface::DecryptBySM4ECB(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(ALGO_DEC_SM4_ECB);
-    int nret = pAlgoProcLib->ProcessAlgorithm(param);
-    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
-
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_DEC_SM4_ECB);
 }
 
 bool AlgoProcInterface::HexStr2Buffer(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::HexStr2Buffer(param);
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_HEX2BUF);
 }
 
 bool AlgoProcInterface::Buffer2HexStr(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::Buffer2HexStr(param);
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_BUF2HEX);
 }
 
 bool AlgoProcInterface::Base64Encode(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::Base64Encode(param);
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+    return dispatchAlgoProcLib(param, ALGO_ENC_BASE64);
 }
 
 bool AlgoProcInterface::Base64Decode(AlgorithmParams &param)
 {
-    printf("%s begin\n", __func__);
-    int nret = AlgoProcLib::Base64Decode(param);
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
-           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
-    return (nret == AlgoProcLib::RES_OK);
+   return dispatchAlgoProcLib(param, ALGO_DEC_BASE64);
 }
 
 AlgoProcInterface::AlgoProcInterface()
 {
 
+}
+
+bool AlgoProcInterface::dispatchAlgoProcLib(AlgorithmParams &param, ALGO_TYPE algotype)
+{
+    printf("%s begin\n", __func__);
+    AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(algotype);
+    int nret = pAlgoProcLib->ProcessAlgorithm(param);
+    AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
+
+    printf("%s finish [res=%s] [err=%d]\n", __func__,
+           (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
+    return (nret == AlgoProcLib::RES_OK);
 }

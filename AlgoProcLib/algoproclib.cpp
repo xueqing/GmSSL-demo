@@ -12,7 +12,8 @@
 
 using namespace GB;
 
-AlgoProcLib::AlgoProcLib()
+AlgoProcLib::AlgoProcLib(ALGO_TYPE algotype)
+    : m_algotype(algotype)
 {
 }
 
@@ -51,8 +52,25 @@ void AlgoProcLib::Deinitialize()
 
 int AlgoProcLib::ProcessAlgorithm(AlgorithmParams &param)
 {
-    UNUSED_ARGUMENT(param);
-    return RES_NOT_SUPPORTED;
+    int nret = RES_OK;
+    switch (m_algotype) {
+    case ALGO_HEX2BUF:
+        nret = HexStr2Buffer(param);
+        break;
+    case ALGO_BUF2HEX:
+        nret = Buffer2HexStr(param);
+        break;
+    case ALGO_ENC_BASE64:
+        nret = Base64Encode(param);
+        break;
+    case ALGO_DEC_BASE64:
+        nret = Base64Decode(param);
+        break;
+    default:
+        nret = RES_NOT_SUPPORTED;
+        break;
+    }
+    return nret;
 }
 
 int AlgoProcLib::HexStr2Buffer(AlgorithmParams &param)

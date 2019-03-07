@@ -49,7 +49,7 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         pAlgoProcLib = new SMFourECBCrypt(AlgoProcLib::CRYP_DEC);
         break;
     default:
-        pAlgoProcLib = new AlgoProcLib;
+        pAlgoProcLib = new AlgoProcLib(algotype);
         break;
     }
     return pAlgoProcLib;

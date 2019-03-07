@@ -8,7 +8,6 @@ namespace GB {
 class AlgoProcLib
 {
 #define MAX_BUF_SIZE 512
-#define UNUSED_ARGUMENT(x) (void)x
 public:
     enum PROC_RES
     {
@@ -24,18 +23,21 @@ public:
         CRYP_ENC = 1,
     };
 
-    AlgoProcLib();
+    AlgoProcLib(ALGO_TYPE algotype=ALGO_UNKNOWN);
     virtual ~AlgoProcLib();
 
     static void Initialize(); // must be called before using it
     static void Deinitialize(); // must be called after using it
 
     virtual int ProcessAlgorithm(AlgorithmParams &param); //ref PROC_RES
-    static int HexStr2Buffer(AlgorithmParams &param);
-    static int Buffer2HexStr(AlgorithmParams &param);
-    static int Base64Encode(AlgorithmParams &param);
-    static int Base64Decode(AlgorithmParams &param);
+    int HexStr2Buffer(AlgorithmParams &param);
+    int Buffer2HexStr(AlgorithmParams &param);
+    int Base64Encode(AlgorithmParams &param);
+    int Base64Decode(AlgorithmParams &param);
     static void ReleaseAlgoProcLib(AlgoProcLib *pAlgoProcLib);
+
+private:
+    ALGO_TYPE m_algotype;
 };
 
 }//namespace GB

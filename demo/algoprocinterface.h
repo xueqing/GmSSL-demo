@@ -27,6 +27,8 @@ private:
     static AlgoProcInterface* m_pInstance;
     static std::mutex         m_instanceMutex;
 
+    bool dispatchAlgoProcLib(GB::AlgorithmParams &param, GB::ALGO_TYPE algotype);
+
     class AlgoProcInterfaceDestruct
     {
     public:

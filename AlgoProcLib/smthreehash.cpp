@@ -9,6 +9,7 @@ using namespace std;
 using namespace GB;
 
 SMThreeHash::SMThreeHash()
+    : AlgoProcLib()
 {
 
 }
