@@ -20,6 +20,18 @@ int RandomGenerator::ProcessAlgorithm(AlgorithmParams &param)
 
     unsigned char buf[MAX_BUF_SIZE];
     memset(buf, 0, MAX_BUF_SIZE);
+
+    if(param.lenOut > sizeof(buf))
+    {
+        fprintf(stderr, "%s() len overflow\n", __func__);
+        return nret;
+    }
+
+#if __NO_GMSSL__
+    printf("no gmssl\n");
+    if(RAND_bytes(buf, param.lenOut) > 0)
+        nret = RES_OK;
+#else
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     do
     {
@@ -40,6 +52,11 @@ int RandomGenerator::ProcessAlgorithm(AlgorithmParams &param)
     }while(false);
 
     EVP_CIPHER_CTX_free(ctx);
-    param.strOut = string(reinterpret_cast<const char*>(buf));
+#endif
+
+    if(nret == RES_OK)
+    {
+        param.strOut = string(reinterpret_cast<const char*>(buf));
+    }
     return nret;
 }

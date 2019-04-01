@@ -19,6 +19,10 @@ unix{
     INSTALLS += target
 }
 
+NO_GMSSL{
+    QMAKE_CXXFLAGS += -D__NO_GMSSL__
+}
+
 INCLUDEPATH += \
     $$PWD/../util \
     $$PWD/../include
