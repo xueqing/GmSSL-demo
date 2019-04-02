@@ -2,8 +2,12 @@
 
 #include <string.h>
 
+#if __NO_GMSSL__
+#include <openssl/rand.h>
+#else
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+#endif
 
 using namespace std;
 using namespace GB;
