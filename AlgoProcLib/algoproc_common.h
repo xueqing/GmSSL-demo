@@ -20,10 +20,10 @@ enum ALGO_TYPE {
 };
 
 struct AlgorithmParams {
-    std::string key;
     std::string strIn;
     std::string strOut;
     unsigned int lenOut = 0;
+    std::string sm4_ecb_key;
 };
 
 }//namespace GB

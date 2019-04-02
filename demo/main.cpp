@@ -81,17 +81,27 @@ int main()
 
 #if TEST_SM4_ECB
     {
+        GB::AlgorithmParams paramHex;
+        paramHex.strIn = "0123456789ABCDEFFEDCBA9876543210";
+        TestHexStr2Buffer(paramHex);
+
+        GB::AlgorithmParams paramBuf;
+        paramBuf.strIn = "681edf34d206965e86b3e94f536e4246";
+        TestHexStr2Buffer(paramBuf);
+
         GB::AlgorithmParams paramEn;
-        paramEn.strIn = "aaaaqwertyuiop";
+        paramEn.strIn = paramHex.strOut;
         paramEn.lenOut = 128;
+        paramEn.sm4_ecb_key = paramHex.strOut;
         TestEncryptBySM4ECB(paramEn);
 
         GB::AlgorithmParams paramDe;
         paramDe.strIn = paramEn.strOut;
         paramDe.lenOut = 128;
+        paramDe.sm4_ecb_key = paramHex.strOut;
         TestDecryptBySM4ECB(paramDe);
 
-        if(paramEn.strIn == paramDe.strOut)
+        if(paramEn.strIn == paramDe.strOut && paramEn.strOut == paramBuf.strOut)
             printf("SM4_ECB test success\n");
         else
         {

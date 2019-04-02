@@ -24,11 +24,13 @@ SMFourECBCrypt::SMFourECBCrypt(CRPT_TYPE cryptype)
 
 int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
 {
+    const unsigned KEYLEN = 16;
+
+    unsigned char key[KEYLEN];
+    memset(key, 0, sizeof(key));
+    memcpy(key, param.sm4_ecb_key.c_str(), param.sm4_ecb_key.length());
+
 #if __NO_GMSSL__
-    unsigned char key[16] = {
-        0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
-        0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
-    };
 
     sms4_key_t pubkey;
 
@@ -40,7 +42,7 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
     memset(outBuf, 0, MAX_BUF_SIZE);
 
     printf("before sm4:\n");
-    for(int i = 0; i < 16; i++)
+    for(unsigned i = 0; i < KEYLEN; i++)
         printf("%02x ", inBuf[i]);
     printf("\n");
 
@@ -52,10 +54,11 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
     {
         sms4_set_decrypt_key(&pubkey, key);
     }
+
     sms4_ecb_encrypt(inBuf, outBuf, &pubkey, m_crypType);
 
     printf("after  sm4:\n");
-    for(int i = 0; i < 16; i++)
+    for(unsigned i = 0; i < KEYLEN; i++)
         printf("%02x ", outBuf[i]);
     printf("\n");
 
@@ -63,11 +66,6 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
     return RES_OK;
 #else
     int nret = RES_SERVER_ERROR;
-
-    unsigned char key[16] = {
-        0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
-        0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
-    };
 
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
@@ -80,7 +78,7 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
     do
     {
         printf("before sm4:\n");
-        for(int i = 0; i < 16; i++)
+        for(unsigned i = 0; i < KEYLEN; i++)
             printf("%02x ", inBuf[i]);
         printf("\n");
 
@@ -105,7 +103,7 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
         }
 
         printf("after  sm4:\n");
-        for(int i = 0; i < 16; i++)
+        for(unsigned i = 0; i < KEYLEN; i++)
             printf("%02x ", outBuf[i]);
         printf("\n");
 
