@@ -1,5 +1,12 @@
 #/bin/sh
 
+# /home/kiki/qt-workspace/github/GmSSL/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/kiki/qt-workspace/github/GmSSL/
+echo $LD_LIBRARY_PATH
+gmssl -help
+gmssl ec -out client/private/ec.pem 512
+exit
+
 # 客户端证书
 mkdir -p client/private
 chmod 700 client/private
