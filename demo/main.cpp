@@ -12,7 +12,8 @@ using namespace std;
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
 #define TEST_SM4_ECB 0
-#define TEST_EC_KEY_GEN 1
+#define TEST_EC_KEY_GEN 0
+#define TEST_SM2_SIGN_VERIFY 1
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
@@ -23,6 +24,7 @@ void TestHashSM3();
 void TestEncryptBySM4ECB(GB::AlgorithmParams &param);
 void TestDecryptBySM4ECB(GB::AlgorithmParams &param);
 void TestECKeyGenerator();
+void TestSM2SignAndVerify();
 
 int main()
 {
@@ -113,9 +115,15 @@ int main()
     }
 #endif
 
-#ifdef TEST_EC_KEY_GEN
+#if TEST_EC_KEY_GEN
     {
         TestECKeyGenerator();
+    }
+#endif
+
+#if TEST_SM2_SIGN_VERIFY
+    {
+        TestSM2SignAndVerify();
     }
 #endif
 
@@ -267,4 +275,34 @@ void TestECKeyGenerator()
         printf("Generate ec key success [prikey=%s]\n", param.ec_pri_key.c_str());
         printf("Generate ec key success [prikey_hexstr=%s]\n", paramEn.strOut.c_str());
     }
+}
+
+void TestSM2SignAndVerify()
+{
+    GB::AlgorithmParams param;
+    if(!AlgoProcInterface::GetInstance()->GenerateECkey(param))
+    {
+        printf("Generate ec key error\n");
+        assert(false);
+    }
+
+    string msg = "I am a message to test sm2 sign and verify.";
+
+    GB::AlgorithmParams paramEn;
+    paramEn.strIn = msg;
+    paramEn.ec_pri_key = param.ec_pri_key;
+    if(!AlgoProcInterface::GetInstance()->SignBySM2(paramEn))
+    {
+        printf("Sign by SM2 error\n");
+        assert(false);
+    }
+    printf("Sign by SM2 success [enc_msg=%s]\n", paramEn.strOut.c_str());
+
+    paramEn.ec_pub_key = param.ec_pub_key;
+    if(!AlgoProcInterface::GetInstance()->VerifySignBySM2(paramEn))
+    {
+        printf("Verify sign by SM2 error\n");
+        assert(false);
+    }
+    printf("Verify sign by SM2 success\n");
 }

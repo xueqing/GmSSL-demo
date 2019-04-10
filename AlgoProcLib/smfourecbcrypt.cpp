@@ -82,7 +82,7 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
             printf("%02x ", inBuf[i]);
         printf("\n");
 
-        if(ctx == NULL)
+        if(!ctx)
         {
             fprintf(stderr, "%s() failed to allocate ctx\n", __func__);
             break;

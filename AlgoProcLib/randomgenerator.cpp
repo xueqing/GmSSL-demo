@@ -39,7 +39,7 @@ int RandomGenerator::ProcessAlgorithm(AlgorithmParams &param)
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     do
     {
-        if(ctx == NULL)
+        if(!ctx)
         {
             fprintf(stderr, "%s() failed to allocate ctx\n", __func__);
             break;

@@ -14,8 +14,9 @@ SMTwoECSign::SMTwoECSign()
 int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
 {
     /* longest known is SHA512 */
+    int nret = RES_SERVER_ERROR;
     int type = NID_undef;
-    EC_KEY *prikey = NULL;
+    EC_KEY *ecKey = nullptr;
 
     unsigned char dgst[param.strIn.length()];
     memset(dgst, 0, sizeof(dgst));
@@ -24,13 +25,36 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
     unsigned char sig[MAX_BUF_SIZE];
     memset(sig, 0, MAX_BUF_SIZE);
 
-    if(!SM2_sign(type, dgst, param.strIn.length(), sig, &param.lenOut, prikey))
+    do
     {
-        fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
-        return RES_SERVER_ERROR;
-    }
+        if(!(ecKey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)))
+        {
+            fprintf(stderr, "%s() failed to call EC_KEY_new_by_curve_name\n", __func__);
+            break;
+        }
 
-    param.strOut = string(reinterpret_cast<const char*>(sig));
-    return RES_OK;
+        unsigned char key[param.ec_pri_key.length()];
+        memset(key, 0, sizeof(key));
+        memcpy(key, param.ec_pri_key.c_str(), param.ec_pri_key.length());
+        if(!EC_KEY_oct2priv(ecKey, key, param.ec_pri_key.length()))
+        {
+            fprintf(stderr, "%s() failed to call EC_KEY_oct2priv\n", __func__);
+            break;
+        }
+
+        if(!SM2_sign(type, dgst, param.strIn.length(), sig, &param.lenOut, ecKey))
+        {
+            fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
+            break;
+        }
+
+        nret = RES_OK;
+    }while(false);
+
+    EC_KEY_free(ecKey);
+
+    if(nret == RES_OK)
+        param.strOut = string(reinterpret_cast<const char*>(sig));
+    return nret;
 }
 

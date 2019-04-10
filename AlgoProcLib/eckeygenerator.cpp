@@ -51,19 +51,19 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
     if(nret == RES_OK)
     {
         printByPem(ecKey);
+
+        unsigned char buf[MAX_BUF_SIZE];
+        memset(buf, 0, MAX_BUF_SIZE);
         unsigned char *ptrPub=nullptr, *ptrPri=nullptr;
         if(EC_KEY_key2buf(ecKey, EC_KEY_get_conv_form(ecKey), &ptrPub, nullptr) != 0)
             param.ec_pub_key = string(reinterpret_cast<char*>(ptrPub));
-        if(EC_KEY_priv2buf(ecKey, &ptrPri) != 0)
-            param.ec_pri_key = string(reinterpret_cast<char*>(ptrPri));
+        if(EC_KEY_priv2oct(ecKey, buf, MAX_BUF_SIZE) != 0)
+            param.ec_pri_key = string(reinterpret_cast<char*>(buf));
         OPENSSL_free(ptrPub);
         OPENSSL_free(ptrPri);
     }
-    else if(ecKey)
-    {
-        EC_KEY_free(ecKey);
-        ecKey = nullptr;
-    }
+
+    EC_KEY_free(ecKey);
 
     return nret;
 }
