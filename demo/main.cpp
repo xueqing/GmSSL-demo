@@ -12,6 +12,7 @@ using namespace std;
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
 #define TEST_SM4_ECB 0
+#define TEST_EC_KEY_GEN 1
 
 void TestRandom();
 void TestBase64Encode(GB::AlgorithmParams &param);
@@ -21,6 +22,7 @@ void TestBuffer2HexStr(GB::AlgorithmParams &param);
 void TestHashSM3();
 void TestEncryptBySM4ECB(GB::AlgorithmParams &param);
 void TestDecryptBySM4ECB(GB::AlgorithmParams &param);
+void TestECKeyGenerator();
 
 int main()
 {
@@ -108,6 +110,12 @@ int main()
             printf("SM4_ECB test failure\n");
             assert(false);
         }
+    }
+#endif
+
+#ifdef TEST_EC_KEY_GEN
+    {
+        TestECKeyGenerator();
     }
 #endif
 
@@ -231,4 +239,32 @@ void TestDecryptBySM4ECB(GB::AlgorithmParams &param)
     }
     printf("SM4_ECB decode success [str_in=%s] [str_out=%s]\n",
            param.strIn.c_str(), param.strOut.c_str());
+}
+
+void TestECKeyGenerator()
+{
+    GB::AlgorithmParams param;
+    if(!AlgoProcInterface::GetInstance()->GenerateECkey(param))
+    {
+        printf("Generate ec key error\n");
+        assert(false);
+    }
+
+    {
+        GB::AlgorithmParams paramEn;
+        paramEn.strIn = param.ec_pub_key;
+        paramEn.lenOut = 512;
+        TestBuffer2HexStr(paramEn);
+        printf("Generate ec key success [pubkey=%s]\n", param.ec_pub_key.c_str());
+        printf("Generate ec key success [pubkey_hexstr=%s]\n", paramEn.strOut.c_str());
+    }
+
+    {
+        GB::AlgorithmParams paramEn;
+        paramEn.strIn = param.ec_pri_key;
+        paramEn.lenOut = 256;
+        TestBuffer2HexStr(paramEn);
+        printf("Generate ec key success [prikey=%s]\n", param.ec_pri_key.c_str());
+        printf("Generate ec key success [prikey_hexstr=%s]\n", paramEn.strOut.c_str());
+    }
 }
