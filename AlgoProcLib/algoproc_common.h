@@ -17,6 +17,7 @@ enum ALGO_TYPE {
     ALGO_HASH_SM3,
     ALGO_ENC_SM4_ECB,
     ALGO_DEC_SM4_ECB,
+    ALGO_GET_KEY_EC,
 };
 
 struct AlgorithmParams {
@@ -24,6 +25,8 @@ struct AlgorithmParams {
     std::string strOut;
     unsigned int lenOut = 0;
     std::string sm4_ecb_key;
+    std::string ec_pub_key;
+    std::string ec_pri_key;
 };
 
 }//namespace GB

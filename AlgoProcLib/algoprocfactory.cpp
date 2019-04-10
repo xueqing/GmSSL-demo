@@ -5,6 +5,7 @@
 #include "smtwoecverify.h"
 #include "smthreehash.h"
 #include "smfourecbcrypt.h"
+#include "eckeygenerator.h"
 
 using namespace GB;
 
@@ -47,6 +48,9 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         break;
     case ALGO_DEC_SM4_ECB:
         pAlgoProcLib = new SMFourECBCrypt(AlgoProcLib::CRYP_DEC);
+        break;
+    case ALGO_GET_KEY_EC:
+        pAlgoProcLib = new ECKeyGenerator;
         break;
     default:
         pAlgoProcLib = new AlgoProcLib(algotype);
