@@ -6,6 +6,7 @@
 #include "smthreehash.h"
 #include "smfourecbcrypt.h"
 #include "eckeygenerator.h"
+#include "symmkeygenerator.h"
 
 using namespace GB;
 
@@ -51,6 +52,9 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         break;
     case ALGO_GET_KEY_EC:
         pAlgoProcLib = new ECKeyGenerator;
+        break;
+    case ALGO_GET_KEY_SYMM:
+        pAlgoProcLib = new SymmKeyGenerator;
         break;
     default:
         pAlgoProcLib = new AlgoProcLib(algotype);

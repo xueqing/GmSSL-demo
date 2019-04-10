@@ -18,6 +18,7 @@ enum ALGO_TYPE {
     ALGO_ENC_SM4_ECB,
     ALGO_DEC_SM4_ECB,
     ALGO_GET_KEY_EC,
+    ALGO_GET_KEY_SYMM,
 };
 
 struct AlgorithmParams {

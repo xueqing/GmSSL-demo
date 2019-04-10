@@ -35,7 +35,8 @@ SOURCES += \
     smtwoecverify.cpp \
     smthreehash.cpp \
     smfourecbcrypt.cpp \
-    eckeygenerator.cpp
+    eckeygenerator.cpp \
+    symmkeygenerator.cpp
 
 HEADERS += \
     algoproclib.h \
@@ -46,4 +47,5 @@ HEADERS += \
     smtwoecverify.h \
     smthreehash.h \
     smfourecbcrypt.h \
-    eckeygenerator.h
+    eckeygenerator.h \
+    symmkeygenerator.h
