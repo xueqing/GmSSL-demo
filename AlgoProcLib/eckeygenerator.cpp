@@ -3,9 +3,12 @@
 #include <string.h>
 
 #include <openssl/sm2.h>
+#include <openssl/pem.h>
 
 using namespace std;
 using namespace GB;
+
+static void printByPem(EC_KEY *ecKey);
 
 ECKeyGenerator::ECKeyGenerator()
     : AlgoProcLib()
@@ -20,11 +23,21 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
 
     do
     {
+        /*
+         * SM2标准文本中提供了四个测试用椭圆曲线域参数:
+         *  192比特素数域椭圆曲线域参数（sm2p192test)
+         *  256比特素数域椭圆曲线域参数（sm2p256test)
+         *  193比特二进制域椭圆曲线域参数 (sm2b193test)
+         *  257比特二进制域椭圆曲线域参数 (sm2b257test)
+         */
         if(!(ecKey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)))
         {
             fprintf(stderr, "%s() failed to call EC_KEY_new_by_curve_name\n", __func__);
             break;
         }
+
+        // For cert signing, if not, will result in a SSL error of 0x1408a0c1 (no shared cipher)
+        EC_KEY_set_asn1_flag(ecKey, OPENSSL_EC_NAMED_CURVE);
 
         if(EC_KEY_generate_key(ecKey) != 1)
         {
@@ -37,6 +50,7 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
 
     if(nret == RES_OK)
     {
+        printByPem(ecKey);
         unsigned char *ptrPub=nullptr, *ptrPri=nullptr;
         if(EC_KEY_key2buf(ecKey, EC_KEY_get_conv_form(ecKey), &ptrPub, nullptr) != 0)
             param.ec_pub_key = string(reinterpret_cast<char*>(ptrPub));
@@ -50,5 +64,52 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
         EC_KEY_free(ecKey);
         ecKey = nullptr;
     }
+
     return nret;
+}
+
+static void printByPem(EC_KEY *ecKey)
+{
+    BIO *outbio = nullptr;
+    EVP_PKEY *pkey = nullptr;
+    do
+    {
+        // Create the Input/Output BIO's
+        if(!(outbio = BIO_new(BIO_s_file()))
+                || !(outbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
+        {
+            fprintf(stderr, "%s() failed to new bio\n", __func__);
+            break;
+        }
+
+        if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
+            BIO_printf(outbio, "Error writing private key data in PEM format");
+        if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
+            BIO_printf(outbio, "Error writing private key data in PEM format");
+
+//        // Converting the EC key into a PKEY structure
+//        if(!(pkey = EVP_PKEY_new()))
+//        {
+//            fprintf(stderr, "%s() failed to call EVP_PKEY_new\n", __func__);
+//            break;
+//        }
+//        if(!EVP_PKEY_assign_EC_KEY(pkey, ecKey))
+//        {
+//            fprintf(stderr, "%s() failed to call EVP_PKEY_assign_EC_KEY\n", __func__);
+//            break;
+//        }
+
+//        // print the key length
+//        BIO_printf(outbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
+
+//        // print the private/public key data in PEM format
+//        if(!PEM_write_bio_PrivateKey(outbio, pkey, NULL, NULL, 0, 0, NULL))
+//            BIO_printf(outbio, "Error writing private key data in PEM format");
+//        if(!PEM_write_bio_PUBKEY(outbio, pkey))
+//            BIO_printf(outbio, "Error writing public key data in PEM format");
+    }while(false);
+
+    // Free up all structures
+    BIO_free_all(outbio);
+    EVP_PKEY_free(pkey); // will release ecKey structure
 }
