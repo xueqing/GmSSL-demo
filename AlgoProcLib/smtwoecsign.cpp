@@ -1,17 +1,17 @@
-#include "smtwoellipticcurvesign.h"
+#include "smtwoecsign.h"
 
 #include <openssl/sm2.h>
 
 using namespace std;
 using namespace GB;
 
-SMTwoEllipticCurveSign::SMTwoEllipticCurveSign()
+SMTwoECSign::SMTwoECSign()
     : AlgoProcLib()
 {
 
 }
 
-int SMTwoEllipticCurveSign::ProcessAlgorithm(AlgorithmParams &param)
+int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
 {
     /* longest known is SHA512 */
     int type = NID_undef;
@@ -33,3 +33,4 @@ int SMTwoEllipticCurveSign::ProcessAlgorithm(AlgorithmParams &param)
     param.strOut = string(reinterpret_cast<const char*>(sig));
     return RES_OK;
 }
+

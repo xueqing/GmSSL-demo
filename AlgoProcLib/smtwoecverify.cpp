@@ -1,17 +1,17 @@
-#include "smtwoellipticcurveverify.h"
+#include "smtwoecverify.h"
 
 #include <openssl/sm2.h>
 
 using namespace std;
 using namespace GB;
 
-SMTwoEllipticCurveVerify::SMTwoEllipticCurveVerify()
+SMTwoECVerify::SMTwoECVerify()
     : AlgoProcLib()
 {
 
 }
 
-int SMTwoEllipticCurveVerify::ProcessAlgorithm(AlgorithmParams &param)
+int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
 {
     /* longest known is SHA512 */
     int type = NID_undef;
@@ -33,3 +33,4 @@ int SMTwoEllipticCurveVerify::ProcessAlgorithm(AlgorithmParams &param)
 
     return RES_OK;
 }
+

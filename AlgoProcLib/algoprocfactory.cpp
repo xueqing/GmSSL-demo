@@ -1,8 +1,8 @@
 #include "algoprocfactory.h"
 
 #include "randomgenerator.h"
-#include "smtwoellipticcurvesign.h"
-#include "smtwoellipticcurveverify.h"
+#include "smtwoecsign.h"
+#include "smtwoecverify.h"
 #include "smthreehash.h"
 #include "smfourecbcrypt.h"
 
@@ -34,10 +34,10 @@ AlgoProcLib *AlgoProcFactory::CreateAlgoProc(ALGO_TYPE algotype)
         pAlgoProcLib = new RandomGenerator;
         break;
     case ALGO_ENC_SM2:
-        pAlgoProcLib = new SMTwoEllipticCurveSign;
+        pAlgoProcLib = new SMTwoECSign;
         break;
     case ALGO_DEC_SM2:
-        pAlgoProcLib = new SMTwoEllipticCurveVerify;
+        pAlgoProcLib = new SMTwoECVerify;
         break;
     case ALGO_HASH_SM3:
         pAlgoProcLib = new SMThreeHash;
