@@ -8,7 +8,15 @@
 using namespace std;
 using namespace GB;
 
+#define PRINT_KEY 0
+#define SELF_SIGN_AND_VERIFY 0
+
+#if PRINT_KEY
 static void printByPem(EC_KEY *ecKey);
+#endif
+#if SELF_SIGN_AND_VERIFY
+static void testSignAndVerify(EC_KEY *ecKey);
+#endif
 
 ECKeyGenerator::ECKeyGenerator()
     : AlgoProcLib()
@@ -50,8 +58,12 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
 
     if(nret == RES_OK)
     {
+#if PRINT_KEY
         printByPem(ecKey);
-
+#endif
+#if SELF_SIGN_AND_VERIFY
+        testSignAndVerify(ecKey);
+#endif
         unsigned char buf[MAX_BUF_SIZE];
         memset(buf, 0, MAX_BUF_SIZE);
         unsigned char *ptrPub=nullptr, *ptrPri=nullptr;
@@ -68,6 +80,7 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
     return nret;
 }
 
+#if PRINT_KEY
 static void printByPem(EC_KEY *ecKey)
 {
     BIO *outbio = nullptr;
@@ -83,9 +96,17 @@ static void printByPem(EC_KEY *ecKey)
         }
 
         if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
-            BIO_printf(outbio, "Error writing private key data in PEM format");
+        {
+            BIO_printf(outbio, "Error writing private key data in PEM format [lib=%s] [func=%s] [reason=%s]\n",
+                       ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
+                       ERR_reason_error_string(ERR_get_error()));
+        }
         if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
-            BIO_printf(outbio, "Error writing private key data in PEM format");
+        {
+            BIO_printf(outbio, "Error writing private key data in PEM format [lib=%s] [func=%s] [reason=%s]\n",
+                       ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
+                       ERR_reason_error_string(ERR_get_error()));
+        }
 
 //        // Converting the EC key into a PKEY structure
 //        if(!(pkey = EVP_PKEY_new()))
@@ -113,3 +134,38 @@ static void printByPem(EC_KEY *ecKey)
     BIO_free_all(outbio);
     EVP_PKEY_free(pkey); // will release ecKey structure
 }
+#endif
+
+#if SELF_SIGN_AND_VERIFY
+static void testSignAndVerify(EC_KEY *ecKey)
+{
+    int type = NID_undef;
+    string msg = "I am a message to test sm2 sign and verify.";
+    unsigned int lenOut = 0;
+
+    unsigned char dgst[msg.length()];
+    memset(dgst, 0, sizeof(dgst));
+    memcpy(dgst, msg.c_str(), msg.length());
+
+    unsigned char sig[MAX_BUF_SIZE];
+    memset(sig, 0, MAX_BUF_SIZE);
+
+    do
+    {
+        if(!SM2_sign(type, dgst, msg.length(), sig, &lenOut, ecKey))
+        {
+            fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
+            break;
+        }
+
+        fprintf(stdout, "%s() succeed to SM2_sign\n", __func__);
+
+        if(1 != SM2_verify(type, dgst, msg.length(), sig, lenOut, ecKey))
+        {
+            fprintf(stderr, "%s() failed to SM2_verify\n", __func__);
+            break;
+        }
+        fprintf(stdout, "%s() succeed to SM2_verify\n", __func__);
+    }while(false);
+}
+#endif
