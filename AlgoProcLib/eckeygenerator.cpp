@@ -18,6 +18,8 @@ static void printByPem(EC_KEY *ecKey);
 static void testSignAndVerify(EC_KEY *ecKey);
 #endif
 
+static void saveToPem(EC_KEY *ecKey, const string &filePath);
+
 ECKeyGenerator::ECKeyGenerator()
     : AlgoProcLib()
 {
@@ -64,6 +66,7 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
 #if SELF_SIGN_AND_VERIFY
         testSignAndVerify(ecKey);
 #endif
+        saveToPem(ecKey, param.filePath);
         unsigned char buf[MAX_BUF_SIZE];
         memset(buf, 0, MAX_BUF_SIZE);
         unsigned char *ptrPub=nullptr, *ptrPri=nullptr;
@@ -169,3 +172,47 @@ static void testSignAndVerify(EC_KEY *ecKey)
     }while(false);
 }
 #endif
+
+static void saveToPem(EC_KEY *ecKey, const string &filePath)
+{
+    BIO *outbio = nullptr;
+    EVP_PKEY *pkey = nullptr;
+    do
+    {
+        if(filePath.empty())
+            break;
+
+        // if exist, break
+        FILE *pFile = fopen(filePath.c_str(), "r");
+        if(pFile)
+        {
+            fclose(pFile);
+            break;
+        }
+
+        // Create the Input/Output BIO's
+        if(!(outbio = BIO_new(BIO_s_file()))
+                || !(outbio = BIO_new_file(filePath.c_str(), "w")))
+        {
+            fprintf(stderr, "%s() failed to new bio\n", __func__);
+            break;
+        }
+
+        if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
+        {
+            BIO_printf(outbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+                       ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
+                       ERR_reason_error_string(ERR_get_error()));
+        }
+        if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
+        {
+            BIO_printf(outbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
+                       ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
+                       ERR_reason_error_string(ERR_get_error()));
+        }
+    }while(false);
+
+    // Free up all structures
+    BIO_free_all(outbio);
+    EVP_PKEY_free(pkey); // will release ecKey structure
+}

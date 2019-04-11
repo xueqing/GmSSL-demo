@@ -28,6 +28,7 @@ struct AlgorithmParams {
     std::string sm4_ecb_key;
     std::string ec_pub_key;
     std::string ec_pri_key;
+    std::string filePath;
 };
 
 }//namespace GB

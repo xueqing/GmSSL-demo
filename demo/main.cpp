@@ -279,7 +279,9 @@ void TestECKeyGenerator()
 
 void TestSM2SignAndVerify()
 {
+    string filePath = "/tmp/sks/sm2.pem";
     GB::AlgorithmParams param;
+    param.filePath = filePath;
     if(!AlgoProcInterface::GetInstance()->GenerateECkey(param))
     {
         printf("Generate ec key error\n");
@@ -289,6 +291,7 @@ void TestSM2SignAndVerify()
     string msg = "I am a message to test sm2 sign and verify.";
 
     GB::AlgorithmParams paramEn;
+    paramEn.filePath = filePath;
     paramEn.strIn = msg;
     paramEn.ec_pri_key = param.ec_pri_key;
     if(!AlgoProcInterface::GetInstance()->SignBySM2(paramEn))
