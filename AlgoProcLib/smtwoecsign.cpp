@@ -30,7 +30,7 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
     EC_KEY *ecKey = nullptr;
 #endif
     EVP_PKEY *pkey = nullptr;
-    BIO *outbio = nullptr;
+    BIO *pbio = nullptr;
     EVP_MD_CTX *mdctx = nullptr;
 
     unsigned char dgst[param.strIn.length()];
@@ -71,8 +71,8 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
         }
 #else
         // Create the Input/Output BIO's
-        if(!(outbio = BIO_new(BIO_s_file()))
-                || !(outbio = BIO_new_file(param.filePath.c_str(), "r")))
+        if(!(pbio = BIO_new(BIO_s_file()))
+                || !(pbio = BIO_new_file(param.filePath.c_str(), "r")))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;
@@ -83,9 +83,9 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
             fprintf(stderr, "%s() failed to call EVP_PKEY_new\n", __func__);
             break;
         }
-        if(!(pkey=PEM_read_bio_PrivateKey(outbio, NULL, 0, NULL)))
+        if(!(pkey=PEM_read_bio_PrivateKey(pbio, NULL, 0, NULL)))
         {
-            BIO_printf(outbio, "Error call PEM_read_bio_PrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_read_bio_PrivateKey [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
             break;
@@ -127,7 +127,7 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
         param.strOut = string(reinterpret_cast<const char*>(sig));
 
     EVP_PKEY_free(pkey);
-    BIO_free_all(outbio);
+    BIO_free_all(pbio);
     EVP_MD_CTX_destroy(mdctx);
 
     return nret;
@@ -136,26 +136,26 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
 #if PRINT_KEY
 static void printByPem(EC_KEY *ecKey)
 {
-    BIO *outbio = nullptr;
+    BIO *pbio = nullptr;
     do
     {
         // Create the Input/Output BIO's
-        if(!(outbio = BIO_new(BIO_s_file()))
-                || !(outbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
+        if(!(pbio = BIO_new(BIO_s_file()))
+                || !(pbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;
         }
 
-        if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
+        if(!PEM_write_bio_ECPrivateKey(pbio, ecKey, NULL, NULL, 0, NULL, NULL))
         {
-            BIO_printf(outbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
     }while(false);
 
     // Free up all structures
-    BIO_free_all(outbio);
+    BIO_free_all(pbio);
 }
 #endif

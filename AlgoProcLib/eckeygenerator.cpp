@@ -86,27 +86,27 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
 #if PRINT_KEY
 static void printByPem(EC_KEY *ecKey)
 {
-    BIO *outbio = nullptr;
+    BIO *pbio = nullptr;
     EVP_PKEY *pkey = nullptr;
     do
     {
         // Create the Input/Output BIO's
-        if(!(outbio = BIO_new(BIO_s_file()))
-                || !(outbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
+        if(!(pbio = BIO_new(BIO_s_file()))
+                || !(pbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;
         }
 
-        if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
+        if(!PEM_write_bio_ECPrivateKey(pbio, ecKey, NULL, NULL, 0, NULL, NULL))
         {
-            BIO_printf(outbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
-        if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
+        if(!PEM_write_bio_EC_PUBKEY(pbio, ecKey))
         {
-            BIO_printf(outbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
@@ -124,17 +124,17 @@ static void printByPem(EC_KEY *ecKey)
 //        }
 
 //        // print the key length
-//        BIO_printf(outbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
+//        BIO_printf(pbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
 
 //        // print the private/public key data in PEM format
-//        if(!PEM_write_bio_PrivateKey(outbio, pkey, NULL, NULL, 0, 0, NULL))
-//            BIO_printf(outbio, "Error call PEM_write_bio_PrivateKey");
-//        if(!PEM_write_bio_PUBKEY(outbio, pkey))
-//            BIO_printf(outbio, "Error call PEM_write_bio_PUBKEY");
+//        if(!PEM_write_bio_PrivateKey(pbio, pkey, NULL, NULL, 0, 0, NULL))
+//            BIO_printf(pbio, "Error call PEM_write_bio_PrivateKey");
+//        if(!PEM_write_bio_PUBKEY(pbio, pkey))
+//            BIO_printf(pbio, "Error call PEM_write_bio_PUBKEY");
     }while(false);
 
     // Free up all structures
-    BIO_free_all(outbio);
+    BIO_free_all(pbio);
     EVP_PKEY_free(pkey); // will release ecKey structure
 }
 #endif
@@ -175,7 +175,7 @@ static void testSignAndVerify(EC_KEY *ecKey)
 
 static void saveToPem(EC_KEY *ecKey, const string &filePath)
 {
-    BIO *outbio = nullptr;
+    BIO *pbio = nullptr;
     EVP_PKEY *pkey = nullptr;
     do
     {
@@ -191,28 +191,28 @@ static void saveToPem(EC_KEY *ecKey, const string &filePath)
         }
 
         // Create the Input/Output BIO's
-        if(!(outbio = BIO_new(BIO_s_file()))
-                || !(outbio = BIO_new_file(filePath.c_str(), "w")))
+        if(!(pbio = BIO_new(BIO_s_file()))
+                || !(pbio = BIO_new_file(filePath.c_str(), "w")))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;
         }
 
-        if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
+        if(!PEM_write_bio_ECPrivateKey(pbio, ecKey, NULL, NULL, 0, NULL, NULL))
         {
-            BIO_printf(outbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
-        if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
+        if(!PEM_write_bio_EC_PUBKEY(pbio, ecKey))
         {
-            BIO_printf(outbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
     }while(false);
 
     // Free up all structures
-    BIO_free_all(outbio);
+    BIO_free_all(pbio);
     EVP_PKEY_free(pkey); // will release ecKey structure
 }
