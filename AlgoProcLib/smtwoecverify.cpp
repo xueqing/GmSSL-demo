@@ -86,7 +86,7 @@ static void printByPem(EC_KEY *ecKey)
 
         if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
         {
-            BIO_printf(outbio, "Error writing public key data in PEM format [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(outbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }

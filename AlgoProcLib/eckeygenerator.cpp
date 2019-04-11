@@ -97,13 +97,13 @@ static void printByPem(EC_KEY *ecKey)
 
         if(!PEM_write_bio_ECPrivateKey(outbio, ecKey, NULL, NULL, 0, NULL, NULL))
         {
-            BIO_printf(outbio, "Error writing private key data in PEM format [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(outbio, "Error call PEM_write_bio_ECPrivateKey [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
         if(!PEM_write_bio_EC_PUBKEY(outbio, ecKey))
         {
-            BIO_printf(outbio, "Error writing private key data in PEM format [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(outbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
@@ -125,9 +125,9 @@ static void printByPem(EC_KEY *ecKey)
 
 //        // print the private/public key data in PEM format
 //        if(!PEM_write_bio_PrivateKey(outbio, pkey, NULL, NULL, 0, 0, NULL))
-//            BIO_printf(outbio, "Error writing private key data in PEM format");
+//            BIO_printf(outbio, "Error call PEM_write_bio_PrivateKey");
 //        if(!PEM_write_bio_PUBKEY(outbio, pkey))
-//            BIO_printf(outbio, "Error writing public key data in PEM format");
+//            BIO_printf(outbio, "Error call PEM_write_bio_PUBKEY");
     }while(false);
 
     // Free up all structures
