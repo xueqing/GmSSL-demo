@@ -56,11 +56,6 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
             break;
         }
 
-        nret = RES_OK;
-    }while(false);
-
-    if(nret == RES_OK)
-    {
 #if PRINT_KEY
         printByPem(ecKey);
 #endif
@@ -68,19 +63,22 @@ int ECKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
         testSignAndVerify(ecKey);
 #endif
         saveToPem(ecKey, param.filePath);
+
         unsigned char buf[MAX_BUF_SIZE];
         memset(buf, 0, MAX_BUF_SIZE);
         unsigned char *ptrPub=nullptr, *ptrPri=nullptr;
+
         if(EC_KEY_key2buf(ecKey, EC_KEY_get_conv_form(ecKey), &ptrPub, nullptr) != 0)
             param.ec_pub_key = string(reinterpret_cast<char*>(ptrPub));
         if(EC_KEY_priv2oct(ecKey, buf, MAX_BUF_SIZE) != 0)
             param.ec_pri_key = string(reinterpret_cast<char*>(buf));
+
         OPENSSL_free(ptrPub);
         OPENSSL_free(ptrPri);
-    }
+        nret = RES_OK;
+    }while(false);
 
     EC_KEY_free(ecKey);
-
     return nret;
 }
 
@@ -157,6 +155,7 @@ static void saveToPem(EC_KEY *ecKey, const string &filePath)
 {
     BIO *pbio = nullptr;
     EVP_PKEY *pkey = nullptr;
+
     do
     {
         if(filePath.empty())

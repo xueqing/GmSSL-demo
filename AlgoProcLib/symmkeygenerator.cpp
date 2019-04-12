@@ -27,11 +27,10 @@ int SymmKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
     }
 
     if(RAND_bytes(buf, param.lenOut) > 0)
-        nret = RES_OK;
-
-    if(nret == RES_OK)
     {
         param.strOut = string(reinterpret_cast<const char*>(buf));
+        nret = RES_OK;
     }
+
     return nret;
 }

@@ -55,6 +55,7 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
             fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
             break;
         }
+        param.strOut = string(reinterpret_cast<const char*>(sig));
         nret = RES_OK;
     }while(false);
 #else
@@ -113,6 +114,7 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
             break;
         }
         param.lenOut = lenout;
+        param.strOut = string(reinterpret_cast<const char*>(sig));
         nret = RES_OK;
     }while(false);
 
@@ -120,9 +122,6 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
     BIO_free_all(pbio);
     EVP_MD_CTX_destroy(mdctx);
 #endif
-
-    if(nret == RES_OK)
-        param.strOut = string(reinterpret_cast<const char*>(sig));
 
     return nret;
 }

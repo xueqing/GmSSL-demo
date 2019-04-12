@@ -24,14 +24,14 @@ SMFourECBCrypt::SMFourECBCrypt(CRPT_TYPE cryptype)
 
 int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
 {
-    const unsigned KEYLEN = 16;
+    int nret = RES_SERVER_ERROR;
 
+    const unsigned KEYLEN = 16;
     unsigned char key[KEYLEN];
     memset(key, 0, sizeof(key));
     memcpy(key, param.sm4_ecb_key.c_str(), param.sm4_ecb_key.length());
 
 #if __NO_GMSSL__
-
     sms4_key_t pubkey;
 
     unsigned char inBuf[param.strIn.length()];
@@ -63,10 +63,8 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
     printf("\n");
 
     param.strOut = string(reinterpret_cast<const char*>(outBuf));
-    return RES_OK;
+    nret = RES_OK;
 #else
-    int nret = RES_SERVER_ERROR;
-
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
@@ -108,11 +106,11 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
         printf("\n");
 
         param.lenOut = lenOut;
+        param.strOut = string(reinterpret_cast<const char*>(outBuf));
         nret = RES_OK;
     }while(false);
-
     EVP_CIPHER_CTX_free(ctx);
-    param.strOut = string(reinterpret_cast<const char*>(outBuf));
-    return nret;
 #endif
+
+    return nret;
 }

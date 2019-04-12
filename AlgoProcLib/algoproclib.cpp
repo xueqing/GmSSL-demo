@@ -76,49 +76,62 @@ int AlgoProcLib::ProcessAlgorithm(AlgorithmParams &param)
 
 int AlgoProcLib::HexStr2Buffer(AlgorithmParams &param)
 {
+    int nret = RES_SERVER_ERROR;
     unsigned char *outBuf = nullptr;
-    long *outLen = reinterpret_cast<long*>(&(param.lenOut));
-    if(!(outBuf = OPENSSL_hexstr2buf(param.strIn.c_str(), outLen)))
-    {
-        ERR_print_errors_fp(stderr);
-        return RES_SERVER_ERROR;
-    }
 
-    param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
-    return RES_OK;
+    do
+    {
+        long *outLen = reinterpret_cast<long*>(&(param.lenOut));
+        if(!(outBuf = OPENSSL_hexstr2buf(param.strIn.c_str(), outLen)))
+        {
+            ERR_print_errors_fp(stderr);
+            break;
+        }
+        param.strOut = std::string(reinterpret_cast<const char*>(outBuf));
+        nret = RES_OK;
+    }while(false);
+
+    OPENSSL_free(outBuf);
+    return nret;
 }
 
 int AlgoProcLib::Buffer2HexStr(AlgorithmParams &param)
 {
+    int nret = RES_SERVER_ERROR;
+    char *outBuf = nullptr;
     unsigned char inBuf[param.strIn.length()];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
 
-    char *outBuf = nullptr;
-    if(!(outBuf = OPENSSL_buf2hexstr(inBuf, param.strIn.length())))
+    do
     {
-        ERR_print_errors_fp(stderr);
-        return RES_SERVER_ERROR;
-    }
+        if(!(outBuf = OPENSSL_buf2hexstr(inBuf, param.strIn.length())))
+        {
+            ERR_print_errors_fp(stderr);
+            break;
+        }
 
-    param.strOut = std::string(outBuf);
+        param.strOut = std::string(outBuf);
 
-    // remove redundant ':', added by OPENSSL_buf2hexstr between digits
-    std::string oldstr = ":";
-    std::string newstr = "";
-    param.strOut = CString::ReplaceAll(param.strOut, oldstr, newstr);
-    param.lenOut = param.strOut.length();
+        // remove redundant ':', added by OPENSSL_buf2hexstr between digits
+        std::string oldstr = ":";
+        std::string newstr = "";
+        param.strOut = CString::ReplaceAll(param.strOut, oldstr, newstr);
+        param.lenOut = param.strOut.length();
+        nret = RES_OK;
+    }while(false);
 
-    return RES_OK;
+    OPENSSL_free(outBuf);
+    return nret;
 }
 
 int AlgoProcLib::Base64Encode(AlgorithmParams &param)
 {
+    int nret = RES_SERVER_ERROR;
     char *outBuf=nullptr;
     BIO *pbio=nullptr, *pb64=nullptr;
     BUF_MEM *pbuf=nullptr;
 
-    int nret = RES_SERVER_ERROR;
     do
     {
         pb64 = BIO_new(BIO_f_base64());
@@ -168,10 +181,10 @@ int AlgoProcLib::Base64Encode(AlgorithmParams &param)
 
 int AlgoProcLib::Base64Decode(AlgorithmParams &param)
 {
+    int nret = RES_SERVER_ERROR;
     unsigned char *outBuf=nullptr;
     BIO *pbio=nullptr, *pb64=nullptr;
 
-    int nret = RES_SERVER_ERROR;
     do
     {
         //Calculates the length of a decoded string
