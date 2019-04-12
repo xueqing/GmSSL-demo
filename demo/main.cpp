@@ -29,7 +29,7 @@ void TestSM2SignAndVerify();
 
 int main()
 {
-    GB::AlgoProcLib::Initialize();
+//    GB::AlgoProcLib::Initialize();
 #if TEST_BASE64
     {
         TestBase64();
@@ -112,7 +112,7 @@ int main()
     }
 #endif
 
-    GB::AlgoProcLib::Deinitialize();
+//    GB::AlgoProcLib::Deinitialize();
     return 0;
 }
 
