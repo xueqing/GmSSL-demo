@@ -7,15 +7,16 @@
 
 using namespace std;
 
-#define TEST_BASE64 0
+#define TEST_BASE64 1
 #define TEST_RANDOM 0
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
 #define TEST_SM4_ECB 0
 #define TEST_EC_KEY_GEN 0
-#define TEST_SM2_SIGN_VERIFY 1
+#define TEST_SM2_SIGN_VERIFY 0
 
 void TestRandom();
+void TestBase64();
 void TestBase64Encode(GB::AlgorithmParams &param);
 void TestBase64Decode(GB::AlgorithmParams &param);
 void TestHexStr2Buffer(GB::AlgorithmParams &param);
@@ -28,26 +29,10 @@ void TestSM2SignAndVerify();
 
 int main()
 {
-#if TEST_BASE64
     GB::AlgoProcLib::Initialize();
+#if TEST_BASE64
     {
-        GB::AlgorithmParams paramEn;
-        paramEn.strIn = "aaaaa";
-        paramEn.lenOut = 128;
-        TestBase64Encode(paramEn);
-
-        GB::AlgorithmParams paramDe;
-        paramDe.strIn = paramEn.strOut;
-        paramDe.lenOut = 128;
-        TestBase64Decode(paramDe);
-
-        if(paramEn.strIn == paramDe.strOut)
-            printf("Base64 test success\n");
-        else
-        {
-            printf("Base64 test failure\n");
-            assert(false);
-        }
+        TestBase64();
     }
 #endif
 
@@ -147,6 +132,37 @@ void TestRandom()
     paramEn.lenOut = 128;
     TestBase64Encode(paramEn);
     printf("Generate random success [base64_encode_str=%s]\n", paramEn.strOut.c_str());
+}
+
+void TestBase64()
+{
+    GB::AlgorithmParams param;
+    param.lenOut = 10;
+    if(!AlgoProcInterface::GetInstance()->GenerateRandom(param))
+    {
+        printf("Generate random error\n");
+        assert(false);
+    }
+    printf("Base64 test [rand_str=%s]\n", param.strOut.c_str());
+
+    GB::AlgorithmParams paramEn;
+    paramEn.strIn = param.strOut;
+    paramEn.lenOut = 128;
+    TestBase64Encode(paramEn);
+    printf("Base64 test [base64_encode_str=%s]\n", paramEn.strOut.c_str());
+
+    GB::AlgorithmParams paramDe;
+    paramDe.strIn = paramEn.strOut;
+    paramDe.lenOut = 128;
+    TestBase64Decode(paramDe);
+
+    if(paramEn.strIn == paramDe.strOut)
+        printf("Base64 test success\n");
+    else
+    {
+        printf("Base64 test failure\n");
+        assert(false);
+    }
 }
 
 void TestBase64Encode(GB::AlgorithmParams &param)
