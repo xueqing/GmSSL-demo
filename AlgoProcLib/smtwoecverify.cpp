@@ -9,12 +9,6 @@
 using namespace std;
 using namespace GB;
 
-#define PRINT_KEY 0
-
-#if PRINT_KEY
-static void printByPem(EC_KEY *ecKey);
-#endif
-
 SMTwoECVerify::SMTwoECVerify()
     : AlgoProcLib()
 {
@@ -59,10 +53,6 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
                     ERR_reason_error_string(ERR_get_error()));
             break;
         }
-
-#if PRINT_KEY
-        printByPem(ecKey);
-#endif
 
         if(1 != SM2_verify(type, dgst, param.strIn.length(), sig, param.strOut.length(), ecKey))
         {
@@ -125,30 +115,3 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
 
     return nret;
 }
-
-#if PRINT_KEY
-static void printByPem(EC_KEY *ecKey)
-{
-    BIO *pbio = nullptr;
-    do
-    {
-        // Create the Input/Output BIO's
-        if(!(pbio = BIO_new(BIO_s_file()))
-                || !(pbio = BIO_new_fp(stdout, BIO_NOCLOSE)))
-        {
-            fprintf(stderr, "%s() failed to new bio\n", __func__);
-            break;
-        }
-
-        if(!PEM_write_bio_EC_PUBKEY(pbio, ecKey))
-        {
-            BIO_printf(pbio, "Error call PEM_write_bio_EC_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
-                       ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
-                       ERR_reason_error_string(ERR_get_error()));
-        }
-    }while(false);
-
-    // Free up all structures
-    BIO_free_all(pbio);
-}
-#endif

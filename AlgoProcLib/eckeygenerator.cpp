@@ -110,27 +110,6 @@ static void printByPem(EC_KEY *ecKey)
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
         }
-
-//        // Converting the EC key into a PKEY structure
-//        if(!(pkey = EVP_PKEY_new()))
-//        {
-//            fprintf(stderr, "%s() failed to call EVP_PKEY_new\n", __func__);
-//            break;
-//        }
-//        if(!EVP_PKEY_assign_EC_KEY(pkey, ecKey))
-//        {
-//            fprintf(stderr, "%s() failed to call EVP_PKEY_assign_EC_KEY\n", __func__);
-//            break;
-//        }
-
-//        // print the key length
-//        BIO_printf(pbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
-
-//        // print the private/public key data in PEM format
-//        if(!PEM_write_bio_PrivateKey(pbio, pkey, NULL, NULL, 0, 0, NULL))
-//            BIO_printf(pbio, "Error call PEM_write_bio_PrivateKey");
-//        if(!PEM_write_bio_PUBKEY(pbio, pkey))
-//            BIO_printf(pbio, "Error call PEM_write_bio_PUBKEY");
     }while(false);
 
     // Free up all structures
