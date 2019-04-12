@@ -14,6 +14,7 @@ using namespace GB;
 #if PRINT_KEY
 static void printByPem(EC_KEY *ecKey);
 #endif
+
 #if SELF_SIGN_AND_VERIFY
 static void testSignAndVerify(EC_KEY *ecKey);
 #endif

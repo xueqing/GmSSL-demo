@@ -2,6 +2,7 @@
 
 #include <openssl/sm2.h>
 #include <openssl/pem.h>
+
 #ifndef __NO_GMSSL__
 #include <openssl/evp.h>
 #endif
@@ -18,13 +19,6 @@ SMTwoECVerify::SMTwoECVerify()
 int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
 {
     int nret = RES_SERVER_ERROR;
-#if __NO_GMSSL__
-    int type = NID_undef;
-    EC_KEY *ecKey = nullptr;
-#endif
-    EVP_PKEY *pkey = nullptr;
-    BIO *pbio = nullptr;
-    EVP_MD_CTX *mdctx = nullptr;
 
     unsigned char dgst[param.strIn.length()];
     memset(dgst, 0, sizeof(dgst));
@@ -34,9 +28,12 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
     memset(sig, 0, sizeof(sig));
     memcpy(sig, param.strOut.c_str(), param.strOut.length());
 
+#if __NO_GMSSL__
+    int type = NID_undef;
+    EC_KEY *ecKey = nullptr;
+
     do
     {
-#if __NO_GMSSL__
         if(!(ecKey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)))
         {
             fprintf(stderr, "%s() failed to call EC_KEY_new_by_curve_name\n", __func__);
@@ -62,7 +59,15 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
             nret = RES_VERIFY_FAILURE;
             break;
         }
+        nret = RES_OK;
+    }while(false);
 #else
+    EVP_PKEY *pkey = nullptr;
+    BIO *pbio = nullptr;
+    EVP_MD_CTX *mdctx = nullptr;
+
+    do
+    {
         // Create the Input/Output BIO's
         if(!(pbio = BIO_new(BIO_s_file()))
                 || !(pbio = BIO_new_file(param.filePath.c_str(), "rr")))
@@ -105,13 +110,13 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
             fprintf(stderr, "%s() failed to call EVP_DigestVerifyFinal\n", __func__);
             break;
         }
-#endif
         nret = RES_OK;
     }while(false);
 
     EVP_PKEY_free(pkey);
     BIO_free_all(pbio);
     EVP_MD_CTX_destroy(mdctx);
+#endif
 
     return nret;
 }

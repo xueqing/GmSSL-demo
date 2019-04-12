@@ -19,13 +19,6 @@ SMTwoECSign::SMTwoECSign()
 int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
 {
     int nret = RES_SERVER_ERROR;
-#if __NO_GMSSL__
-    int type = NID_undef;
-    EC_KEY *ecKey = nullptr;
-#endif
-    EVP_PKEY *pkey = nullptr;
-    BIO *pbio = nullptr;
-    EVP_MD_CTX *mdctx = nullptr;
 
     unsigned char dgst[param.strIn.length()];
     memset(dgst, 0, sizeof(dgst));
@@ -34,9 +27,12 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
     unsigned char sig[MAX_BUF_SIZE];
     memset(sig, 0, MAX_BUF_SIZE);
 
+#if __NO_GMSSL__
+    int type = NID_undef;
+    EC_KEY *ecKey = nullptr;
+
     do
     {
-#if __NO_GMSSL__
         if(!(ecKey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)))
         {
             fprintf(stderr, "%s() failed to call EC_KEY_new_by_curve_name\n", __func__);
@@ -59,7 +55,15 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
             fprintf(stderr, "%s() failed to SM2_sign\n", __func__);
             break;
         }
+        nret = RES_OK;
+    }while(false);
 #else
+    EVP_PKEY *pkey = nullptr;
+    BIO *pbio = nullptr;
+    EVP_MD_CTX *mdctx = nullptr;
+
+    do
+    {
         // Create the Input/Output BIO's
         if(!(pbio = BIO_new(BIO_s_file()))
                 || !(pbio = BIO_new_file(param.filePath.c_str(), "r")))
@@ -109,16 +113,16 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
             break;
         }
         param.lenOut = lenout;
-#endif
         nret = RES_OK;
     }while(false);
-
-    if(nret == RES_OK)
-        param.strOut = string(reinterpret_cast<const char*>(sig));
 
     EVP_PKEY_free(pkey);
     BIO_free_all(pbio);
     EVP_MD_CTX_destroy(mdctx);
+#endif
+
+    if(nret == RES_OK)
+        param.strOut = string(reinterpret_cast<const char*>(sig));
 
     return nret;
 }
