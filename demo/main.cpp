@@ -268,7 +268,7 @@ void TestDecryptBySM4ECB(GB::AlgorithmParams &param)
 void TestECKeyGenerator()
 {
     GB::AlgorithmParams param;
-    if(!AlgoProcInterface::GetInstance()->GenerateECkey(param))
+    if(!AlgoProcInterface::GetInstance()->GenerateECKey(param))
     {
         printf("Generate ec key error\n");
         assert(false);
@@ -298,7 +298,7 @@ void TestSM2SignAndVerify()
     string filePath = "/tmp/sks/sm2.pem";
     GB::AlgorithmParams param;
     param.filePath = filePath;
-    if(!AlgoProcInterface::GetInstance()->GenerateECkey(param))
+    if(!AlgoProcInterface::GetInstance()->GenerateECKey(param))
     {
         printf("Generate ec key error\n");
         assert(false);

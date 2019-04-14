@@ -17,7 +17,7 @@ public:
     bool EncryptBySM4ECB(GB::AlgorithmParams &param);
     bool DecryptBySM4ECB(GB::AlgorithmParams &param);
 
-    bool GenerateECkey(GB::AlgorithmParams &param);
+    bool GenerateECKey(GB::AlgorithmParams &param);
 
     bool HexStr2Buffer(GB::AlgorithmParams &param);
     bool Buffer2HexStr(GB::AlgorithmParams &param);
