@@ -67,7 +67,7 @@ int SMTwoECSign::ProcessAlgorithm(AlgorithmParams &param)
     {
         // Create the Input/Output BIO's
         if(!(pbio = BIO_new(BIO_s_file()))
-                || !(pbio = BIO_new_file(param.filePath.c_str(), "r")))
+                || !(pbio = BIO_new_file(param.ec_pri_key.c_str(), "r")))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;

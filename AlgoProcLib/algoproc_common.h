@@ -22,6 +22,7 @@ enum ALGO_TYPE {
 };
 
 struct AlgorithmParams {
+    std::string uid;
     std::string strIn;
     std::string strOut;
     unsigned int lenOut = 0;

@@ -70,7 +70,7 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
     {
         // Create the Input/Output BIO's
         if(!(pbio = BIO_new(BIO_s_file()))
-                || !(pbio = BIO_new_file(param.filePath.c_str(), "rr")))
+                || !(pbio = BIO_new_file(param.ec_pub_key.c_str(), "rr")))
         {
             fprintf(stderr, "%s() failed to new bio\n", __func__);
             break;
@@ -81,9 +81,9 @@ int SMTwoECVerify::ProcessAlgorithm(AlgorithmParams &param)
             fprintf(stderr, "%s() failed to call EVP_PKEY_new\n", __func__);
             break;
         }
-        if(!(pkey=PEM_read_bio_PrivateKey(pbio, NULL, 0, NULL)))
+        if(!(pkey=PEM_read_bio_PUBKEY(pbio, NULL, 0, NULL)))
         {
-            BIO_printf(pbio, "Error call PEM_read_bio_PrivateKey [lib=%s] [func=%s] [reason=%s]\n",
+            BIO_printf(pbio, "Error call PEM_read_bio_PUBKEY [lib=%s] [func=%s] [reason=%s]\n",
                        ERR_lib_error_string(ERR_get_error()), ERR_func_error_string(ERR_get_error()),
                        ERR_reason_error_string(ERR_get_error()));
             break;

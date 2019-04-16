@@ -7,13 +7,13 @@
 
 using namespace std;
 
-#define TEST_BASE64 1
+#define TEST_BASE64 0
 #define TEST_RANDOM 0
 #define TEST_CONV_HEX_BUF 0
 #define TEST_HASH_SM3 0
 #define TEST_SM4_ECB 0
 #define TEST_EC_KEY_GEN 0
-#define TEST_SM2_SIGN_VERIFY 0
+#define TEST_SM2_SIGN_VERIFY 1
 
 void TestRandom();
 void TestBase64();
@@ -295,9 +295,10 @@ void TestECKeyGenerator()
 
 void TestSM2SignAndVerify()
 {
-    string filePath = "/tmp/sks/sm2.pem";
+    string filePath = "/tmp/sks";
     GB::AlgorithmParams param;
     param.filePath = filePath;
+    param.uid = "qweasdzxc123";
     if(!AlgoProcInterface::GetInstance()->GenerateECKey(param))
     {
         printf("Generate ec key error\n");
