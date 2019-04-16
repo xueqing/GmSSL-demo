@@ -2,6 +2,7 @@
 #define ALGOPROCINTERFACE_H
 
 #include <mutex>
+#include <map>
 
 #include "algoproc_common.h"
 
@@ -29,6 +30,8 @@ private:
     AlgoProcInterface();
     static AlgoProcInterface* m_pInstance;
     static std::mutex         m_instanceMutex;
+
+    static std::map<GB::ALGO_TYPE, std::string> m_algoMap;
 
     bool dispatchAlgoProcLib(GB::AlgorithmParams &param, GB::ALGO_TYPE algotype);
 

@@ -9,6 +9,22 @@ using namespace GB;
 
 AlgoProcInterface*  AlgoProcInterface::m_pInstance = nullptr;
 std::mutex          AlgoProcInterface::m_instanceMutex;
+map<ALGO_TYPE, string> AlgoProcInterface::m_algoMap = {
+    {ALGO_UNKNOWN, "ALGO_UNKNOWN"},
+    {ALGO_HEX2BUF, "ALGO_HEX2BUF"},
+    {ALGO_BUF2HEX, "ALGO_BUF2HEX"},
+    {ALGO_ENC_BASE64, "ALGO_ENC_BASE64"},
+    {ALGO_DEC_BASE64, "ALGO_DEC_BASE64"},
+    {ALGO_RANDOM, "ALGO_RANDOM"},
+    {ALGO_ENC_SM2, "ALGO_ENC_SM2"},
+    {ALGO_DEC_SM2, "ALGO_DEC_SM2"},
+    {ALGO_HASH_SM3, "ALGO_HASH_SM3"},
+    {ALGO_ENC_SM4_ECB, "ALGO_ENC_SM4_ECB"},
+    {ALGO_DEC_SM4_ECB, "ALGO_DEC_SM4_ECB"},
+    {ALGO_GET_KEY_EC, "ALGO_GET_KEY_EC"},
+    {ALGO_GET_KEY_SYMM, "ALGO_GET_KEY_SYMM"},
+};
+
 AlgoProcInterface::AlgoProcInterfaceDestruct AlgoProcInterface::m_destruct;
 
 AlgoProcInterface *AlgoProcInterface::GetInstance()
@@ -91,12 +107,12 @@ AlgoProcInterface::AlgoProcInterface()
 
 bool AlgoProcInterface::dispatchAlgoProcLib(AlgorithmParams &param, ALGO_TYPE algotype)
 {
-    printf("%s begin\n", __func__);
+    printf("%s begin [algotype=%s]\n", __func__, m_algoMap.at(algotype).c_str());
     AlgoProcLib *pAlgoProcLib = AlgoProcFactory::GetInstance()->CreateAlgoProc(algotype);
     int nret = pAlgoProcLib->ProcessAlgorithm(param);
     AlgoProcLib::ReleaseAlgoProcLib(pAlgoProcLib);
 
-    printf("%s finish [res=%s] [err=%d]\n", __func__,
+    printf("%s finish [algotype=%s] [res=%s] [err=%d]\n", __func__, m_algoMap.at(algotype).c_str(),
            (nret == AlgoProcLib::RES_OK ? "success" : "failure"), nret);
     return (nret == AlgoProcLib::RES_OK);
 }
