@@ -27,6 +27,8 @@ map<ALGO_TYPE, string> AlgoProcInterface::m_algoMap = {
 
 AlgoProcInterface::AlgoProcInterfaceDestruct AlgoProcInterface::m_destruct;
 
+const string SKS_DATA_PATH = "/tmp/sks";
+
 AlgoProcInterface *AlgoProcInterface::GetInstance()
 {
     if(nullptr == m_pInstance)
@@ -202,6 +204,8 @@ bool AlgoProcInterface::GenerateSymmKey(AlgorithmParams &param)
     bool bret = false;
     do
     {
+        // SM4 key: 128 bit
+        param.lenOut = 128/8;
         if(!dispatchAlgoProcLib(param, ALGO_GET_KEY_SYMM))
             break;
 
@@ -218,6 +222,9 @@ bool AlgoProcInterface::GenerateSymmKey(AlgorithmParams &param)
 
 bool AlgoProcInterface::GenerateECKey(AlgorithmParams &param)
 {
+    // SM2 key: 256 bit
+    param.lenOut = 256/8;
+    param.filePath = SKS_DATA_PATH;
     return dispatchAlgoProcLib(param, ALGO_GET_KEY_EC);
 }
 

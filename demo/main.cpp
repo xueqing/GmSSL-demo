@@ -248,7 +248,6 @@ void TestSM4ECB()
 
     GB::AlgorithmParams paramDe;
     paramDe.strIn = paramEn.strOut;
-    paramDe.lenOut = 128;
     paramDe.sm4_ecb_key = paramKey.sm4_ecb_key;
     if(!AlgoProcInterface::GetInstance()->DecryptBySM4ECB(paramDe))
     {
@@ -298,9 +297,7 @@ void TestECKeyGenerator()
 
 void TestSM2SignAndVerify()
 {
-    string filePath = "/tmp/sks";
     GB::AlgorithmParams param;
-    param.filePath = filePath;
     param.uid = "qweasdzxc123";
     if(!AlgoProcInterface::GetInstance()->GenerateECKey(param))
     {
@@ -311,7 +308,6 @@ void TestSM2SignAndVerify()
     string msg = "I am a message to test sm2 sign and verify.";
 
     GB::AlgorithmParams paramEn;
-    paramEn.filePath = filePath;
     paramEn.strIn = msg;
     paramEn.ec_pri_key = param.ec_pri_key;
     if(!AlgoProcInterface::GetInstance()->SignBySM2(paramEn))
