@@ -54,6 +54,11 @@ bool AlgoProcInterface::DecryptBySM4ECB(AlgorithmParams &param)
     return dispatchAlgoProcLib(param, ALGO_DEC_SM4_ECB);
 }
 
+bool AlgoProcInterface::GenerateSymmKey(AlgorithmParams &param)
+{
+    return dispatchAlgoProcLib(param, ALGO_GET_KEY_SYMM);
+}
+
 bool AlgoProcInterface::GenerateECKey(AlgorithmParams &param)
 {
     return dispatchAlgoProcLib(param, ALGO_GET_KEY_EC);
