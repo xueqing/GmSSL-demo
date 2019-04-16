@@ -231,9 +231,10 @@ void TestSM4ECB()
         printf("Generate symm key error\n");
         assert(false);
     }
+    printf("Generate symm key success [key=%s]\n", paramKey.sm4_ecb_key.c_str());
 
     GB::AlgorithmParams paramEn;
-    paramEn.strIn = "qweasdzxcrtyfghv";
+    paramEn.strIn = "qweasdzxcrtyfghvddd";
     paramEn.lenOut = 128;
     paramEn.sm4_ecb_key = paramKey.sm4_ecb_key;
     if(!AlgoProcInterface::GetInstance()->EncryptBySM4ECB(paramEn))

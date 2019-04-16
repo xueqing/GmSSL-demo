@@ -34,7 +34,7 @@ int SMFourECBCrypt::ProcessAlgorithm(AlgorithmParams &param)
 #if __NO_GMSSL__
     sms4_key_t pubkey;
 
-    unsigned char inBuf[param.strIn.length()];
+    unsigned char inBuf[MAX_BUF_SIZE];
     memset(inBuf, 0, sizeof(inBuf));
     memcpy(inBuf, param.strIn.c_str(), param.strIn.length());
 

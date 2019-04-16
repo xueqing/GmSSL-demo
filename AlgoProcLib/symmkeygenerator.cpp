@@ -32,5 +32,7 @@ int SymmKeyGenerator::ProcessAlgorithm(AlgorithmParams &param)
         nret = RES_OK;
     }
 
+    printf("%s [symm_key=%s]\n", __func__, param.sm4_ecb_key.c_str());
+
     return nret;
 }

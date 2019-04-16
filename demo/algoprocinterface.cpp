@@ -125,9 +125,25 @@ bool AlgoProcInterface::EncryptBySM4ECB(AlgorithmParams &param)
         paramKey.strIn = param.sm4_ecb_key;
         if(!dispatchAlgoProcLib(paramKey, ALGO_DEC_BASE64))
             break;
-
         param.sm4_ecb_key = paramKey.strOut;
-        if(!dispatchAlgoProcLib(param, ALGO_ENC_SM4_ECB))
+
+        bool bflag = true;
+        AlgorithmParams block, tmp;
+        block.sm4_ecb_key = param.sm4_ecb_key;
+        tmp.strIn = param.strIn;
+        while(!tmp.strIn.empty())
+        {
+            block.strIn = tmp.strIn.substr(0, 128/8);
+            tmp.strIn.erase(0, 128/8);
+            block.strOut.clear();
+            if(!dispatchAlgoProcLib(block, ALGO_ENC_SM4_ECB))
+            {
+                bflag = false;
+                break;
+            }
+            param.strOut += block.strOut;
+        }
+        if(!bflag)
             break;
 
         AlgorithmParams param64;
@@ -156,9 +172,24 @@ bool AlgoProcInterface::DecryptBySM4ECB(AlgorithmParams &param)
         param64.strIn = param.strIn;
         if(!dispatchAlgoProcLib(param64, ALGO_DEC_BASE64))
             break;
-        param.strIn = param64.strOut;
 
-        if(!dispatchAlgoProcLib(param, ALGO_DEC_SM4_ECB))
+        bool bflag = true;
+        AlgorithmParams block, tmp;
+        block.sm4_ecb_key = param.sm4_ecb_key;
+        tmp.strIn = param64.strOut;
+        while(!tmp.strIn.empty())
+        {
+            block.strIn = tmp.strIn.substr(0, 128/8);
+            tmp.strIn.erase(0, 128/8);
+            block.strOut.clear();
+            if(!dispatchAlgoProcLib(block, ALGO_DEC_SM4_ECB))
+            {
+                bflag = false;
+                break;
+            }
+            param.strOut += block.strOut;
+        }
+        if(!bflag)
             break;
 
         bret = true;
