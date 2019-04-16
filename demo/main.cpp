@@ -22,6 +22,7 @@ void TestBase64Decode(GB::AlgorithmParams &param);
 void TestHexStr2Buffer(GB::AlgorithmParams &param);
 void TestBuffer2HexStr(GB::AlgorithmParams &param);
 void TestHashSM3();
+void TestSM4ECB();
 void TestEncryptBySM4ECB(GB::AlgorithmParams &param);
 void TestDecryptBySM4ECB(GB::AlgorithmParams &param);
 void TestECKeyGenerator();
@@ -70,33 +71,7 @@ int main()
 
 #if TEST_SM4_ECB
     {
-        GB::AlgorithmParams paramKey;
-        paramKey.lenOut = 128 / 8;
-        if(!AlgoProcInterface::GetInstance()->GenerateSymmKey(paramKey))
-        {
-            printf("Generate symm key error\n");
-            assert(false);
-        }
-
-        GB::AlgorithmParams paramEn;
-        paramEn.strIn = "qweasdzxcrtyfghv";
-        paramEn.lenOut = 128;
-        paramEn.sm4_ecb_key = paramKey.sm4_ecb_key;
-        TestEncryptBySM4ECB(paramEn);
-
-        GB::AlgorithmParams paramDe;
-        paramDe.strIn = paramEn.strOut;
-        paramDe.lenOut = 128;
-        paramDe.sm4_ecb_key = paramKey.sm4_ecb_key;
-        TestDecryptBySM4ECB(paramDe);
-
-        if(paramEn.strIn == paramDe.strOut)
-            printf("SM4_ECB test success\n");
-        else
-        {
-            printf("SM4_ECB test failure\n");
-            assert(false);
-        }
+        TestSM4ECB();
     }
 #endif
 
@@ -126,12 +101,6 @@ void TestRandom()
         assert(false);
     }
     printf("Generate random success [str=%s]\n", param.strOut.c_str());
-
-    GB::AlgorithmParams paramEn;
-    paramEn.strIn = param.strOut;
-    paramEn.lenOut = 128;
-    TestBase64Encode(paramEn);
-    printf("Generate random success [base64_encode_str=%s]\n", paramEn.strOut.c_str());
 }
 
 void TestBase64()
@@ -212,8 +181,15 @@ void TestBuffer2HexStr(GB::AlgorithmParams &param)
 
 void TestHashSM3()
 {
+    /*
+     * in_1:
+     * "6162636461626364616263646162636461626364616263646162636461626364"
+     * "6162636461626364616263646162636461626364616263646162636461626364"
+     * out_1: debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732
+     * in_2: 616263
+     * out_2: 66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0
+    */
     GB::AlgorithmParams paramhex;
-//    paramhex.strIn = "616263";
     paramhex.strIn = "6162636461626364616263646162636461626364616263646162636461626364"
                      "6162636461626364616263646162636461626364616263646162636461626364";
     TestHexStr2Buffer(paramhex);
@@ -227,14 +203,17 @@ void TestHashSM3()
     }
 
     GB::AlgorithmParams paramHash;
-//    paramHash.strIn = "66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0";
     paramHash.strIn = "debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732";
     TestHexStr2Buffer(paramHash);
 
-    if(paramHash.strOut != param.strOut)
+    GB::AlgorithmParams param64;
+    param64.strIn = paramHash.strOut;
+    TestBase64Encode(param64);
+
+    if(param.strOut != param64.strOut)
     {
         printf("Hash by SM3 error [gen_str=%s] [dst_str=%s]\n",
-               param.strOut.c_str(), paramHash.strOut.c_str());
+               param.strOut.c_str(), param64.strOut.c_str());
         assert(false);
     }
     else
@@ -243,26 +222,49 @@ void TestHashSM3()
     }
 }
 
-void TestEncryptBySM4ECB(GB::AlgorithmParams &param)
+void TestSM4ECB()
 {
-    if(!AlgoProcInterface::GetInstance()->EncryptBySM4ECB(param))
+    GB::AlgorithmParams paramKey;
+    paramKey.lenOut = 128 / 8;
+    if(!AlgoProcInterface::GetInstance()->GenerateSymmKey(paramKey))
+    {
+        printf("Generate symm key error\n");
+        assert(false);
+    }
+
+    GB::AlgorithmParams paramEn;
+    paramEn.strIn = "qweasdzxcrtyfghv";
+    paramEn.lenOut = 128;
+    paramEn.sm4_ecb_key = paramKey.sm4_ecb_key;
+    if(!AlgoProcInterface::GetInstance()->EncryptBySM4ECB(paramEn))
     {
         printf("SM4_ECB encode error\n");
         assert(false);
     }
     printf("SM4_ECB encode success [str_in=%s] [str_out=%s]\n",
-           param.strIn.c_str(), param.strOut.c_str());
-}
+           paramEn.strIn.c_str(), paramEn.strOut.c_str());
 
-void TestDecryptBySM4ECB(GB::AlgorithmParams &param)
-{
-    if(!AlgoProcInterface::GetInstance()->DecryptBySM4ECB(param))
+
+    GB::AlgorithmParams paramDe;
+    paramDe.strIn = paramEn.strOut;
+    paramDe.lenOut = 128;
+    paramDe.sm4_ecb_key = paramKey.sm4_ecb_key;
+    if(!AlgoProcInterface::GetInstance()->DecryptBySM4ECB(paramDe))
     {
         printf("SM4_ECB decode error\n");
         assert(false);
     }
     printf("SM4_ECB decode success [str_in=%s] [str_out=%s]\n",
-           param.strIn.c_str(), param.strOut.c_str());
+           paramDe.strIn.c_str(), paramDe.strOut.c_str());
+
+    if(paramEn.strIn == paramDe.strOut)
+        printf("SM4_ECB test success\n");
+    else
+    {
+        printf("SM4_ECB test failure\n");
+        assert(false);
+    }
+
 }
 
 void TestECKeyGenerator()
